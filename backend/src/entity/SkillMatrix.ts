@@ -24,15 +24,6 @@ export class SkillMatrix
     @Column({type:'int'})
     lead_rating: number;
 
-    @Column({type:'text'})
-    lead_comments: string;
-
-    @Column({type:'tinyint'})
-    hr_approval:boolean;
-
-    @Column({type:'text'})
-    hr_comments: string;
-
     @CreateDateColumn()
     created_at: Date;
 

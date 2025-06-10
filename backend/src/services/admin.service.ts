@@ -55,6 +55,9 @@ export class AdminService{
             quarter:q_id,
             year,
             employee_id: emp.employee_id,
+            lead_comments: '',
+            hr_approval: false,
+            hr_comments: '',
           });
         });
 
@@ -90,9 +93,6 @@ export class AdminService{
                         skill_id: skill.skill_id,
                         employee_rating: 0,
                         lead_rating: 0,
-                        lead_comments: '',
-                        hr_approval: false,
-                        hr_comments: '',
                     }),
                 );
             }

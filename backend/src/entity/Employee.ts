@@ -24,6 +24,9 @@ export class Employee
     role_id: number;
 
     @Column({type:'int', nullable:true})
+    hr_id: number|null;
+
+    @Column({type:'int', nullable:true})
     team_id: number | null;
 
     @Column({type:"tinyint", default:true})
@@ -38,6 +41,13 @@ export class Employee
     @ManyToOne(()=>Role,(r)=>r.emp)
     @JoinColumn({name:'role_id'})
     role:Role;
+
+    @ManyToOne(()=>Employee,(e)=>e.hrs)
+    @JoinColumn({name:'hr_id'})
+    hr:Employee;
+
+    @OneToMany(()=>Employee,(e)=>e.hr)
+    hrs:Employee[];
 
     @ManyToOne(()=>Team,(t)=>t.emp,{nullable:true})
     @JoinColumn({name:'team_id'})

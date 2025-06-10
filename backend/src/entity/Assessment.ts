@@ -19,6 +19,15 @@ export class Assessment{
     @Column({type:'int',default:0})
     status: number;
 
+    @Column({type:'text'})
+    lead_comments: string;
+
+    @Column({type:'tinyint'})
+    hr_approval:boolean;
+
+    @Column({type:'text'})
+    hr_comments: string;
+
     @Column({type:'tinyint',default:true})
     is_active: boolean;
 
