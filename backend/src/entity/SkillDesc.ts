@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import { Skill } from "./Skill";
 
-@Entity('skill_levels')
+@Entity('skill_levels_detailed')
 export class SkillDesc
 {
     @PrimaryGeneratedColumn()

@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Position } from "./Position";
 import { RoleSkill } from "./RoleSkill";
 import { SkillProg } from "./SkillProg";
@@ -20,7 +20,7 @@ export class Skill
     @Column({type:'tinyint'})
     is_active: boolean;
 
-    @Column({type:'timestamp'})
+    @CreateDateColumn()
     created_at: Date;
 
     @ManyToOne(()=>Position,(p)=>p.skills)

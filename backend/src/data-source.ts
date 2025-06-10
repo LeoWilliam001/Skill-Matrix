@@ -1,6 +1,17 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
 import * as dotenv from "dotenv";
+import { Assessment } from "./entity/Assessment";
+import { Employee } from "./entity/Employee";
+import { EmpPos } from "./entity/EmpPos";
+import { Position } from "./entity/Position";
+import { Role } from "./entity/Role";
+import { RoleSkill } from "./entity/RoleSkill";
+import { Skill } from "./entity/Skill";
+import { SkillDesc } from "./entity/SkillDesc";
+import { SkillMatrix } from "./entity/SkillMatrix";
+import { SkillProg } from "./entity/SkillProg";
+import { Team } from "./entity/Team";
 dotenv.config();
 console.log(process.env.MYSQL_PASS);
 export const AppDataSource = new DataSource({
@@ -9,10 +20,10 @@ export const AppDataSource = new DataSource({
     port: 3306,
     username: "root",
     password: process.env.MYSQL_PASS,
-    database: "",
+    database: "skill_matrix",
     synchronize: true,
     logging: false,
-    entities: [],
+    entities: [Assessment,Employee,EmpPos,Position,Role,RoleSkill,Skill,SkillDesc,SkillMatrix,SkillProg,Team],
     migrations: [],
     subscribers: [],
 })

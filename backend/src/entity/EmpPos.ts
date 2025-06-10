@@ -1,14 +1,14 @@
-import { Entity, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn } from "typeorm";
 import { Employee } from "./Employee";
 import { Position } from "./Position";
 
 @Entity('employee_position_association')
 export class EmpPos
 {
-    @Column({type:'int'})
+    @PrimaryColumn({type:'int'})
     employee_id: number;
 
-    @Column({type:'int'})
+    @PrimaryColumn({type:'int'})
     pos_id: number;
 
     @Column({type:'tinyint'})

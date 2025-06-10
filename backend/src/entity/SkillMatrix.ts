@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Assessment } from "./Assessment";
 import { Employee } from "./Employee";
 import { Skill } from "./Skill";
@@ -33,7 +33,7 @@ export class SkillMatrix
     @Column({type:'text'})
     hr_comments: string;
 
-    @Column({type:'timestamp'})
+    @CreateDateColumn()
     created_at: Date;
 
     @ManyToOne(()=>Assessment,(a)=>a.skill_matrix)
