@@ -3,9 +3,7 @@
    "version": "1.0.0",
    "main": "index.js",
    "type": "module",
-   "type": "module",
    "scripts": {
-      "build": "tsc",
       "build": "tsc",
       "start": "ts-node src/index.ts",
       "typeorm": "typeorm-ts-node-commonjs"
@@ -25,15 +23,10 @@
       "reflect-metadata": "^0.2.2",
       "router": "^2.2.0",
       "typeorm": "^0.3.24"
-      "router": "^2.2.0",
-      "typeorm": "^0.3.24"
    },
    "devDependencies": {
       "@types/cors": "^2.8.19",
-      "@types/cors": "^2.8.19",
       "@types/dotenv": "^6.1.1",
-      "@types/express": "^5.0.3",
-      "@types/mysql": "^2.15.27",
       "@types/express": "^5.0.3",
       "@types/mysql": "^2.15.27",
       "@types/node": "^22.15.30",
