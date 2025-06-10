@@ -4,9 +4,10 @@
          "es2021"
       ],
       "target": "es2021",
-      "module": "commonjs",
+      "module": "es2022",
       "moduleResolution": "node",
       "outDir": "./build",
+      "allowSyntheticDefaultImports": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
       "sourceMap": true

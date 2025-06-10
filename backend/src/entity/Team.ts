@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Employee } from "./Employee";
 
 @Entity('teams')
@@ -13,7 +13,7 @@ export class Team
     @Column({type: 'int'})
     lead_id:number;
 
-    @Column({type:'timestamp'})
+    @CreateDateColumn()
     created_at: Date;
 
     @OneToMany(()=>Employee,(e)=>e.team)

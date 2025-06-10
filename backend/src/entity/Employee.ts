@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Assessment } from "./Assessment";
 import { Team } from "./Team";
 import { Role } from "./Role";
@@ -23,13 +23,13 @@ export class Employee
     @Column({type:'int'})
     role_id: number;
 
-    @Column({type:'int'})
-    team_id: number;
+    @Column({type:'int', nullable:true})
+    team_id: number | null;
 
     @Column({type:"tinyint", default:true})
     is_active: boolean;
 
-    @Column({type:'timestamp'})
+    @CreateDateColumn()
     created_at: Date;
 
     @OneToMany(()=>Assessment,(a)=>a.employee)
@@ -39,9 +39,9 @@ export class Employee
     @JoinColumn({name:'role_id'})
     role:Role;
 
-    @ManyToOne(()=>Team,(t)=>t.emp)
+    @ManyToOne(()=>Team,(t)=>t.emp,{nullable:true})
     @JoinColumn({name:'team_id'})
-    team:Team;
+    team:Team | null;
 
     @OneToMany(()=>SkillMatrix,(sm)=>sm.employee)
     skill_matrix: SkillMatrix[];
