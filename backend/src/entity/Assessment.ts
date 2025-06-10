@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { SkillMatrix } from "./SkillMatrix";
 import { Employee } from "./Employee";
 
@@ -17,6 +18,7 @@ export class Assessment{
     year: number;
 
     @Column({type:'int',default:0})
+    @Column({type:'int',default:0})
     status: number;
 
     @Column({type:'text'})
@@ -32,8 +34,10 @@ export class Assessment{
     is_active: boolean;
 
     @CreateDateColumn({type:'timestamp'})
+    @CreateDateColumn({type:'timestamp'})
     initiated_at:Date;
 
+    @CreateDateColumn({type:'timestamp'})
     @CreateDateColumn({type:'timestamp'})
     updated_at: Date;
 

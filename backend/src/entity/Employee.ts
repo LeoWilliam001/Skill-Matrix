@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Assessment } from "./Assessment";
 import { Team } from "./Team";
 import { Role } from "./Role";
@@ -33,6 +34,7 @@ export class Employee
     is_active: boolean;
 
     @CreateDateColumn()
+    @CreateDateColumn()
     created_at: Date;
 
     @OneToMany(()=>Assessment,(a)=>a.employee)
@@ -51,6 +53,7 @@ export class Employee
 
     @ManyToOne(()=>Team,(t)=>t.emp,{nullable:true})
     @JoinColumn({name:'team_id'})
+    team:Team | null;
     team:Team | null;
 
     @OneToMany(()=>SkillMatrix,(sm)=>sm.employee)
