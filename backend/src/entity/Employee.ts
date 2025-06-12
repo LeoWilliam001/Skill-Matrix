@@ -33,7 +33,6 @@ export class Employee
     is_active: boolean;
 
     @CreateDateColumn()
-    @CreateDateColumn()
     created_at: Date;
 
     @OneToMany(()=>Assessment,(a)=>a.employee)

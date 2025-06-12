@@ -1,32 +1,28 @@
-import './App.css'
-import MainComponent from './Components/MainComponent'
-import Image from "./react-logo.png";
-function MainContent()
-{
-  return <h1>Welcome Leo</h1>
-}
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
+import LoginPage from './pages/auth/LoginPage';
+import Dashboard from '../src/pages/common/Dashboard';
+import Unauthorized from '../src/pages/Unauthorized';
+
 function App() {
-
   return (
-    <>
-    <header className='border-b-2 border-gray-400'>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
 
-      
-      <nav className='flex justify-between'>
-      <img src={Image} className='m-2 w-14 h-12'/>
-        <ul className='flex flex-row-reverse'>
-          <li className='m-2 mt-4'>About</li>
-          <li className='m-2 mt-4'>Contacts</li>
-          <li className='m-2 mt-4 '>Pricing</li>
-        </ul>
-      </nav>
-    </header>
-      <h1 className='text-white bg-blue-500 p-2 m-1 max-w-1/8 rounded-sm'>Hello world</h1>
-      <br/>
-      <MainComponent/>
-      <MainContent/>
-    </>
-  )
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={[1, 2, 3]}>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/unauthorized" element={<Unauthorized />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
