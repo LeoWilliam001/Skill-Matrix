@@ -6,8 +6,8 @@ const user = localStorage.getItem('user');
 
 const initialState: AuthState = {
   isLoggedIn: !!token,
-  token,
-  user: user ? JSON.parse(user) : null,
+  token: token || '', 
+  user: user ? JSON.parse(user) as User : null, 
 };
 
 const authSlice = createSlice({
@@ -18,15 +18,15 @@ const authSlice = createSlice({
       state.isLoggedIn = true;
       state.token = action.payload.token;
       state.user = action.payload.user;
-      localStorage.setItem('token', action.payload.token);      
-      localStorage.setItem('user', JSON.stringify(action.payload.user)); 
+      localStorage.setItem('token', action.payload.token); // Save token to localStorage
+      localStorage.setItem('user', JSON.stringify(action.payload.user)); // Save user data to localStorage
     },
     logout: (state) => {
       state.isLoggedIn = false;
       state.token = '';
       state.user = null;
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      localStorage.removeItem('token'); // Remove token from localStorage
+      localStorage.removeItem('user'); // Remove user data from localStorage
     },
   },
 });

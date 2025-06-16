@@ -10,9 +10,14 @@ interface Props {
 }
 
 const ProtectedRoute: React.FC<Props> = ({ children, allowedRoles }) => {
-  const user = useSelector((state: RootState) => state.auth.user);
+  const {user, isLoggedIn} = useSelector((state: RootState) => state.auth);
 
-  if (!user || !allowedRoles.includes(user.role_id)) {
+  if(!isLoggedIn)
+  {
+    return <Navigate to="/"/>
+  }
+
+  else if (!user || !allowedRoles.includes(user.role_id)) {
     return <Navigate to="/unauthorized" />;
   }
 

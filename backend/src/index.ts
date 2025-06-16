@@ -6,6 +6,7 @@ import express from 'express';
 import adminRoutes from './routes/admin.route';
 import authRoutes from './routes/auth.route';
 import empRoutes from './routes/emp.route';
+import skillRoutes from './routes/skill.route';
 // import evalRoutes from './routes/eval.route';
 import cors from 'cors';
 import { requestLogger } from "./middleware/logger.middleware";
@@ -22,6 +23,7 @@ app.use(requestLogger);
 app.use('/api/admin',adminRoutes);
 app.use('/api/auth',authRoutes);
 app.use('/api/emp',empRoutes);
+app.use('/api/skill',skillRoutes);
 // app.use('/api/eval',evalRoutes);
 
 AppDataSource.initialize().then(() => {

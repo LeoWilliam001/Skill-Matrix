@@ -31,11 +31,11 @@ const LoginPage: React.FC = () => {
 
   return (
     <>
-    <div className='w-full min-h-screen  bg-linear-to-tr from-white-200 to-blue-400'>
+    <div className='w-full min-h-screen  bg-linear-to-tr from-white-200 to-violet-400'>
       <h1 className='text-blue text-5xl text-center font-medium italic pt-12 text-black'>Skill Matrix</h1>
     <div className='flex md:justify-end justify-center  px-30 py-25 '>
       <div className='border-2 p-12 rounded-2xl bg-white '>
-        <h1 className='text-center mb-8 font-medium text-blue-700 text-2xl'>Welcome Back</h1>
+        <h1 className='text-center mb-8 font-medium text-violet-700 text-2xl'>Welcome Back</h1>
         <form onSubmit={handleLogin} className="flex flex-col w-80 mx-auto gap-4">
           <input
             type="email"
@@ -55,7 +55,7 @@ const LoginPage: React.FC = () => {
           />
           <button
             type="submit"
-            className="bg-blue-700 text-white p-2 rounded hover:bg-blue-600"
+            className="bg-violet-700 text-white p-2 rounded hover:bg-violet-600"
           >
             Login
           </button>

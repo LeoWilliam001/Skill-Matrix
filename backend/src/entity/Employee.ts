@@ -5,6 +5,21 @@ import { Role } from "./Role";
 import { SkillMatrix } from "./SkillMatrix";
 import { EmpPos } from "./EmpPos";
 
+export enum Gender{
+    Male="Male",
+    Female="Female",
+    Non_Binary="Non-Binary",
+    NoPreference="Prefer not to respond",
+    Transgender="Transgender"
+}
+
+export enum MaritalStatus{
+    Single="Single",
+    Married="Married",
+    Widowed="Widowed",
+    Separated="Separated"
+}
+
 @Entity('employees')
 export class Employee
 {
@@ -17,8 +32,23 @@ export class Employee
     @Column({type:'varchar'})
     email: string;
 
+    @Column({type:'int'})
+    age: number;
+
+    @Column({type:'enum',enum:Gender})
+    gender: Gender;
+
     @Column({type:'varchar'})
     password: string;
+
+    @Column({type:'varchar'})
+    location:string;
+
+    @Column({type:'varchar'})
+    nationality: string;
+
+    @Column({type:'enum',enum:MaritalStatus,default:MaritalStatus.Single})
+    marital_status: MaritalStatus;
 
     @Column({type:'int'})
     role_id: number;
@@ -56,7 +86,7 @@ export class Employee
     @OneToMany(()=>SkillMatrix,(sm)=>sm.employee)
     skill_matrix: SkillMatrix[];
 
-    @OneToMany(()=>Team,(t)=>t.employee)
+    @OneToMany(()=>Team,(t)=>t.lead)
     teams:Team[];
 
     @OneToMany(()=>EmpPos,(ep)=>ep.employee)

@@ -7,4 +7,5 @@ router.get("/teamMatrix/:id",getTeamMatrix);
 router.get("/myMatrix/:id",getMatrixById);
 router.patch("/matrix/rate",empRates);
 router.patch("/matrix/leadRate",leadRates);
+
 export default router;

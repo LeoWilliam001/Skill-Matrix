@@ -6,7 +6,7 @@ export class AuthService {
 
     async loginUser(email: string, pass: string): Promise<Employee | null> {
         const user = await this.empRepo.findOne({ where:{email},
-            relations: ['role','hr','team']
+            relations: ['role','hr','team','emp_pos','emp_pos.position','emp_pos.position.skills','team.lead']
          });
 
         if (!user) {

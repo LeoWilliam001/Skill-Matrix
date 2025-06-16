@@ -28,7 +28,7 @@ export class EmpService{
         });
         return result;
     }
-
+    
     async viewMatrixById(emp_id:number){
         const skillmats=await this.SkillMatRepo.find({
             where:{employee_id:emp_id}

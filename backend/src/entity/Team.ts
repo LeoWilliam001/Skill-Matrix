@@ -21,5 +21,5 @@ export class Team
 
     @ManyToOne(()=>Employee,(e)=>e.teams)
     @JoinColumn({name:'lead_id'})
-    employee:Employee;
+    lead:Employee;
 }
