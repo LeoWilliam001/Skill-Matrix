@@ -5,6 +5,10 @@ import { Employee } from "../entity/Employee";
 import { EmpPos } from "../entity/EmpPos";
 import { SkillMatrix } from "../entity/SkillMatrix";
 import { Skill } from "../entity/Skill";
+import { error } from "console";
+import { Role } from "../entity/Role";
+import { Position } from "../entity/Position";
+import { Team } from "../entity/Team";
 
 export class AdminService{
     private EmpRepo=AppDataSource.getRepository(Employee);
@@ -12,14 +16,17 @@ export class AdminService{
     private AssessmentRepo=AppDataSource.getRepository(Assessment);
     private SkillMatrixRepo=AppDataSource.getRepository(SkillMatrix);
     private SkillRepo = AppDataSource.getRepository(Skill);
+    private RoleRepo=AppDataSource.getRepository(Role);
+    private PosRepo = AppDataSource.getRepository(Position);
+    private teamRepo=AppDataSource.getRepository(Team);
 
     //Creation of employees by admin and position initiation
-    async createEmp(data: Partial<Employee> & {positions:{pos_id:number,isPrimary:boolean}[]}) {
-        const {positions,...empData}=data;
+    async createEmp(data: Partial<Employee> & {position:{pos_id:number,isPrimary:boolean}[]}) {
+        const {position,...empData}=data;
         const employee = this.EmpRepo.create(empData);
         const savedEmp = await this.EmpRepo.save(employee);
 
-        const empPosEntries = positions.map(pos => {
+        const empPosEntries = position.map(pos => {
             return this.EmpPosRepo.create({
               employee_id: savedEmp.employee_id,
               pos_id: pos.pos_id,
@@ -28,6 +35,19 @@ export class AdminService{
           });
         await this.EmpPosRepo.save(empPosEntries);
         return savedEmp;
+    }
+
+    async updateEmp(data:Partial<Employee>)
+    {
+        const empRepo=await this.EmpRepo.findOne({
+            where:{employee_id:data.employee_id}
+        })
+        if(!empRepo)
+        {
+            throw error;
+        }
+        Object.assign(empRepo, data);
+        return await this.EmpRepo.save(empRepo);
     }
 
     //View all employees
@@ -102,5 +122,46 @@ export class AdminService{
 
         return { message: 'Assessments and Skill Matrix initiated for all employees.' };
       }
+
+      async getRoles()
+      {
+        const roles=await this.RoleRepo.find();
+        if(!roles)
+        {
+            return;
+        }
+        return roles;
+      }
+
+      async getHrs()
+      {
+        const hrs=await this.EmpRepo.find({
+            where:{role_id:2}
+        });
+        if(!hrs)
+        {
+            return;
+        }
+        return hrs;
+      }
+
+      async getPositions()
+      {
+        const positions=await this.PosRepo.find();
+        if(!positions)
+        {
+            return;
+        }
+        return positions;
+      }
       
+      async getTeams()
+      {
+        const teams=await this.teamRepo.find();
+        if(!teams)
+        {
+            return;
+        }
+        return teams;
+      }
 }

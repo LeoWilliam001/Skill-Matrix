@@ -46,10 +46,16 @@ export interface Role {
   }
 
   export interface EmplPos {
-    employee_id: number;
+    // employee_id: number;
     pos_id: number;
-    is_primary: number;
+    isPrimary: boolean;
+  }
+
+  export interface EmployeePos {
+    // employee_id: number;
+    pos_id: number;
     position: Position;
+    is_primary: boolean;
   }
 
   export interface User {
@@ -69,7 +75,7 @@ export interface Role {
     role: Role;
     hr: HR;
     team: Team | null;
-    emp_pos: EmplPos[];
+    emp_pos: EmployeePos[];
   }
   
   export interface AuthState {
@@ -96,6 +102,33 @@ export interface Role {
     role: Role;
     hr: HR;
     team: Team | null;
-    emp_pos: EmplPos[];
+    position: EmplPos[];
   }
   
+  export interface Assessments{
+    assessment_id: number,
+    employee_id: number,
+    quarter: number,
+    year: number,
+    status: number,
+    lead_comments: string,
+    hr_approval: boolean,
+    hr_comments: string,
+    is_active: boolean,
+    initiated_at: Date,
+  }
+  
+  export interface Matrix
+  {
+    skill_matrix_id: number,
+    employee_id: number,
+    assessment_id: number,
+    skill_id: number,
+    skill:Skill,
+    employee_rating: number,
+    lead_rating: number,
+  }
+
+  export type Gender = "Male" | "Female" | "Non-Binary" | "Prefer not to respond" | "Transgender";
+
+  export type MaritalStatus = "Single" | "Married" | "Widowed" | "Separated";

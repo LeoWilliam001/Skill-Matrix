@@ -47,6 +47,15 @@ export class EmpService{
 
             if (repo) {
                 repo.employee_rating = datum.employee_rating;
+                const assess_id=repo.assessment_id;
+                const assessRepo=await this.AssessmentRepo.findOne({
+                    where:{assessment_id:assess_id}
+                })
+                if(assessRepo)
+                {
+                    assessRepo.status=1;
+                }
+                await this.AssessmentRepo.save(assessRepo);
                 await this.SkillMatRepo.save(repo);
             }
         }

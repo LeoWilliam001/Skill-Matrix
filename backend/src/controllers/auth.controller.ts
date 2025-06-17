@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 
 const authService = new AuthService();
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || 'i-am-react';
 
 export const loginUser = async (req: Request, res: Response): Promise<any> => {
     try {

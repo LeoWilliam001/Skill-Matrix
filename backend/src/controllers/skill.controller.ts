@@ -68,3 +68,19 @@ export const getUpgradeGuide=async(req:Request,res:Response)=>{
         res.status(500).json({error:"Internal Server error"});
     }
 }
+
+export const getPositions=async(req:Request,res:Response)=>{
+    try{
+        const positions=await skillService.getPositions();
+        if(!positions)
+        {
+            res.status(400).json({message:"Bad request in retrieving positions"});
+        }
+        res.status(200).json(positions);
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.status(500).json({error:"Internal Server error in getting positions"});
+    }
+}

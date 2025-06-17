@@ -18,15 +18,15 @@ const authSlice = createSlice({
       state.isLoggedIn = true;
       state.token = action.payload.token;
       state.user = action.payload.user;
-      localStorage.setItem('token', action.payload.token); // Save token to localStorage
-      localStorage.setItem('user', JSON.stringify(action.payload.user)); // Save user data to localStorage
+      localStorage.setItem('token', action.payload.token); 
+      localStorage.setItem('user', JSON.stringify(action.payload.user)); 
     },
     logout: (state) => {
       state.isLoggedIn = false;
       state.token = '';
       state.user = null;
-      localStorage.removeItem('token'); // Remove token from localStorage
-      localStorage.removeItem('user'); // Remove user data from localStorage
+      localStorage.removeItem('token'); 
+      localStorage.removeItem('user'); 
     },
   },
 });
