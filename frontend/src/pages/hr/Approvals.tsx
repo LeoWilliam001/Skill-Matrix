@@ -64,7 +64,6 @@ const HrApprovals = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           comments: hrComment,
-          hr_approval: 1
         })
       });
 

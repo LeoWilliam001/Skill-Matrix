@@ -10,6 +10,10 @@ export class EmpService{
     private SkillMatRepo=AppDataSource.getRepository(SkillMatrix);
     private AssessmentRepo=AppDataSource.getRepository(Assessment);
 
+    // async viewAllMatrix(){
+    //     const matrices=await this.SkillMatRepo.find();
+    //     if()
+    // }
     async viewmyTeamMatrix(id:number){
         const team=await this.TeamRepo.findOne({
             where:{lead_id:id}
@@ -63,7 +67,7 @@ export class EmpService{
     }
 
     async leadRates(id:number,comments:string,data:any[])
-    {
+    {   
         for(const datum of data)
         {
             const repo=await this.SkillMatRepo.findOne({

@@ -4,6 +4,7 @@ import { Team } from "./Team";
 import { Role } from "./Role";
 import { SkillMatrix } from "./SkillMatrix";
 import { EmpPos } from "./EmpPos";
+import { Designation } from "./Designation";
 
 export enum Gender{
     Male="Male",
@@ -47,6 +48,9 @@ export class Employee
     @Column({type:'varchar'})
     nationality: string;
 
+    @Column({ type: 'int', nullable: true })
+    desig_id: number;
+
     @Column({type:'enum',enum:MaritalStatus,default:MaritalStatus.Single})
     marital_status: MaritalStatus;
 
@@ -71,6 +75,11 @@ export class Employee
     @ManyToOne(()=>Role,(r)=>r.emp)
     @JoinColumn({name:'role_id'})
     role:Role;
+
+    @ManyToOne(() => Designation, (designation) => designation.employees)
+    @JoinColumn({ name: 'desig_id' })
+    designation: Designation;
+
 
     @ManyToOne(()=>Employee,(e)=>e.hrs)
     @JoinColumn({name:'hr_id'})

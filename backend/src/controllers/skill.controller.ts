@@ -84,3 +84,35 @@ export const getPositions=async(req:Request,res:Response)=>{
         res.status(500).json({error:"Internal Server error in getting positions"});
     }
 }
+
+export const getSkillMatrixById=async(req:Request,res:Response)=>{
+    try{
+        const matrices=await skillService.getSkillMatrixById(Number(req.params.id));
+        if(!matrices)
+        {
+            return null;
+        }
+        res.status(200).json(matrices);
+    }
+    catch(err)
+    {
+        console.error(err);
+        res.status(500).json({error:"Skill matric: Internal server error"});
+    }
+}
+
+export const getSkillMatrixByLead=async(req:Request,res:Response)=>{
+    try{
+        const assessments=await skillService.getSkillMatrixByLead(Number(req.params.id));
+        if(!assessments)
+        {
+            res.status(400).json({msg:"Maybe some data issues"});
+        }
+        res.status(200).json(assessments);
+    }
+    catch(err)
+    {
+        console.error(err);
+        res.status(500).json({error:"SkillMatrixLead: Internal server error"});
+    }
+}

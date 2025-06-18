@@ -70,7 +70,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
 
   return (
     <nav className="sticky top-0 z-50 bg-violet-600 rounded-md p-4 shadow-lg m-2">
-      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
+      <div className="container flex flex-col md:flex-row justify-between items-center">
         <div className="text-white text-3xl font-extrabold mb-4 md:mb-0">Skill Matrix</div>
         <ul className="flex flex-wrap justify-center md:flex-nowrap space-x-4 md:space-x-6 items-center text-sm md:text-base">
           <li>
@@ -89,6 +89,15 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
               Skill Criteria
             </button>
           </li>
+          <li>
+            <button
+              onClick={() => onNavigate('skillMatrix')}
+              className="text-white hover:text-violet-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-opacity-75 rounded-md px-2 py-1"
+            >
+              Skill Matrix
+            </button>
+          </li>
+
 
           {assess && (<li>
             <button
@@ -129,14 +138,6 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
               </li>
               </>
               )}
-              <li>
-                <button
-                  onClick={() => onNavigate('skillMatrix')}
-                  className="text-white hover:text-violet-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-opacity-75 rounded-md px-2 py-1"
-                >
-                  Skill Matrix
-                </button>
-              </li>
             </>
           )}
 
