@@ -73,7 +73,6 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
         <div className="text-white text-3xl font-extrabold mb-4 md:mb-0">Skill Matrix</div>
         <ul className="flex flex-wrap justify-center md:flex-nowrap space-x-4 md:space-x-6 items-center text-sm md:text-base">
-          {/* Removed My Profile button from here as it's now in the dropdown */}
           <li>
             <button
               onClick={() => onNavigate('skillUpgradeGuide')}
@@ -111,6 +110,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                 </button>
               </li>
               {user.role.role_name === "HR" && (
+                <>
               <li>
                 <button
                   onClick={() => onNavigate('viewEmp')}
@@ -119,6 +119,15 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
                   View Employees
                 </button>
               </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('hrApprovals')}
+                  className="text-white hover:text-violet-200 cursor-pointer transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-opacity-75 rounded-md px-2 py-1"
+                >
+                  Approvals
+                </button>
+              </li>
+              </>
               )}
               <li>
                 <button

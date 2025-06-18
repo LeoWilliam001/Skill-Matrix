@@ -35,6 +35,38 @@ export const getAssessmentbyRoles=async(req:Request,res:Response)=>{
   }
 }
 
+export const submitAssessbyRole=async(req:Request,res:Response)=>{
+  try{
+    const data=req.body;
+    const rate=await evalService.submitAssessbyRole(Number(req.params.id),data);
+    if(!rate)
+    {
+      res.status(400).json({msg:"Issue is likely in sending req"});
+    }
+    res.status(201).json({msg:"Employee rating was successful"});
+  }
+  catch(err)
+  {
+    res.status(500).json({error:"SubmitAssessment:Internal server error"});
+  }
+}
+
+export const hrApprovalbyAssess=async(req:Request,res:Response)=>{
+  try{
+    const approve=await evalService.hrApprovalbyAssess(Number(req.params.id),req.body.comments);
+    if(!approve)
+    {
+      res.status(400).json({msg:"Cannot be approved sorry"});
+    }
+    res.status(200).json(approve);
+  }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json({error:"HR Approval: Internal server error"});
+  }
+}
+
 export const getMatricesByAssess=async(req:Request,res:Response)=>{
   try{
     const matrices=await evalService.getMatrixByAssess(Number(req.params.id));

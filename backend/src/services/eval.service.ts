@@ -58,6 +58,7 @@ export class EvalService{
                   status: 1,
                   is_active: true,
                 },
+                relations:['employee']
               });
           
               return {
@@ -77,22 +78,73 @@ export class EvalService{
             
             const memberIds=members.map(emp => emp.employee_id).filter(eid => eid !== id);
             console.log(memberIds);
-            const memberAssess = await this.assessmentRepo.findOne({
+            const memberAssess = await this.assessmentRepo.find({
                 where: {
                   employee_id: In(memberIds),
                   status: 2,
                   is_active: true,
                 },
+                relations:['skill_matrix','skill_matrix.skill','employee']
               });
             return {
                 self:null,
                 team:memberAssess
             }
         }
-          
     }
 
-    
+    async submitAssessbyRole(id:number,data:any[])
+    {
+        for(const datum of data)
+          {
+              const repo=await this.skillMatrixRepo.findOne({
+                  where:{skill_matrix_id:datum.skill_matrix_id}
+              })
+
+              if (repo.employee_id===id) {
+                  repo.employee_rating = datum.employee_rating;
+                  const assess_id=repo.assessment_id;
+                  const assessRepo=await this.assessmentRepo.findOne({
+                      where:{assessment_id:assess_id}
+                  })
+                  if(assessRepo)
+                  {
+                      assessRepo.status=1;
+                  }
+                  await this.assessmentRepo.save(assessRepo);
+                  await this.skillMatrixRepo.save(repo);
+              }
+              else{
+                  repo.lead_rating = datum.employee_rating;
+                  const assess_id=repo.assessment_id;
+                  const assessRepo=await this.assessmentRepo.findOne({
+                      where:{assessment_id:assess_id}
+                  })
+                  if(assessRepo)
+                  {
+                      assessRepo.status=2;
+                  }
+                  await this.assessmentRepo.save(assessRepo);
+                  await this.skillMatrixRepo.save(repo);
+              }
+          }
+
+          return {message:"Employee rating are saved successfully"};
+    }
+
+    async hrApprovalbyAssess(id:number,comments:string){
+      const assessment=await this.assessmentRepo.findOneBy({
+        assessment_id:id
+      })
+      if(!assessment)
+      {
+        return null;
+      }
+      assessment.hr_approval=true;
+      assessment.hr_comments=comments;
+      assessment.status=3;
+      return await this.assessmentRepo.save(assessment);
+    }
 
     async getMatrixByAssess(id:number)
     {
@@ -107,10 +159,5 @@ export class EvalService{
             return matrices;
         }
         return;
-    }
-
-    async updateRatingSkills()
-    {
-
     }
 }

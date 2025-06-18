@@ -116,6 +116,7 @@ export interface Role {
     hr_comments: string,
     is_active: boolean,
     initiated_at: Date,
+    employee:User
   }
   
   export interface Matrix

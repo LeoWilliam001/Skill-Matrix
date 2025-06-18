@@ -10,7 +10,7 @@ const Profile:React.FC = () =>{
             <div className='flex flex-col'>
                 <p className='text-3xl font-extrabold text-violet-800'>{user?.employee_name}</p>
                 <span className="inline-flex items-center gap-2 rounded-full px-1 py-1">
-                    <span className="w-3 h-3 bg-green-500 border-1 border-white rounded-full animate-pulse"></span>
+                    <span className="w-2 h-2 bg-green-500 border-1 border-white rounded-full animate-pulse"></span>
                     <span className="text-sm font-medium text-gray-700">Online</span>
                 </span>
             </div>

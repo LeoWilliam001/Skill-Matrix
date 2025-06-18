@@ -85,4 +85,21 @@ export class EmpService{
         await this.AssessmentRepo.save(assessRepo);
         return {message:"Lead rating are saved successfully"};
     }
+
+    async getMyTeams(id:number)
+    {
+        const team=await this.TeamRepo.findOneBy({'lead_id':id});
+        if(team)
+        {
+            const members=await this.EmpRepo.find({
+                where:{'team_id':team.team_id}
+            })
+            if(!members)
+            {
+                return null;
+            }
+            return members;
+        }
+        return null;
+    }
 }

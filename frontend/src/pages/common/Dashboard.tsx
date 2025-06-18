@@ -10,6 +10,7 @@ import UpgradeGuide from './UpgradeGuide';
 import TeamData from './TeamData';
 import ViewEmp from '../hr/ViewEmp';
 import Assessment from './Assessment';
+import HrApprovals from '../hr/Approvals';
 
 const Dashboard = () => {
   const { user} = useSelector((state: RootState) => state.auth);
@@ -63,8 +64,14 @@ const Dashboard = () => {
           return <ViewEmp />;
         }
         return <p className="text-red-500 p-4 text-center text-lg font-semibold">Access Denied to View Employees</p>;
+      case 'hrApprovals':
+        if (user.role.role_name === "HR") {
+          return <HrApprovals/>;
+        }
+        return <p className="text-red-500 p-4 text-center text-lg font-semibold">Access Denied to HR Approvals</p>;
+  
       default:
-        return <Profile/>;
+      return <Profile/>;
     }
   };
 

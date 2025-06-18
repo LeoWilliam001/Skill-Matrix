@@ -1,35 +1,83 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../store";
-import { type Matrix, type Assessments} from "../../types/auth"
+import { type Matrix, type Assessments } from "../../types/auth";
 
-interface FetchedAssess{
-  self:Assessments|null,
-  team:Assessments[]|null,
+interface FetchedAssess {
+  self: Assessments | null;
+  team: Assessments[] | null;
 }
-const Assessment=()=>{
-  const { user} = useSelector((state: RootState) => state.auth);
-  const [skillMatrix,setSkillMatrix]=useState<Matrix[]>([]);
+
+const Assessment = () => {
+  const { user } = useSelector((state: RootState) => state.auth);
+  const [skillMatrix, setSkillMatrix] = useState<Matrix[]>([]);
   const [ratings, setRatings] = useState<{ [key: number]: number }>({});
-  
-  const [assess,setAssess] = useState<FetchedAssess>();
+  const [assess, setAssess] = useState<FetchedAssess>();
+  const [selectedAssessment, setSelectedAssessment] = useState<Assessments | null>(null);
   const [showRatingSection, setShowRatingSection] = useState(false);
+
+  useEffect(() => {
+    const fetchAssess = async () => {
+      try {
+        const res = await fetch(`http://localhost:3001/api/eval/getAssessbyRole/${user?.employee_id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role_name: user?.role.role_name, team_id: user?.team_id })
+        });
+
+        if (!res.ok) {
+          alert("Fetch failed");
+          return;
+        }
+
+        const data = await res.json();
+        setAssess(data);
+      } catch (err) {
+        console.error("Assessment fetch error:", err);
+      }
+    };
+
+    fetchAssess();
+  }, [user?.employee_id]);
+
+  const fetchSkillMatrix = async (assessment: Assessments) => {
+    try {
+      const res = await fetch(`http://localhost:3001/api/eval/matricesByAssess/${assessment.assessment_id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setSkillMatrix(data);
+        setRatings({});
+        setSelectedAssessment(assessment);
+        setShowRatingSection(true);
+      } else {
+        setSkillMatrix([]);
+        setShowRatingSection(false);
+      }
+    } catch (err) {
+      console.error("Matrix fetch error:", err);
+    }
+  };
+
+  const handleRatingChange = (skill_matrix_id: number, value: number) => {
+    setRatings(prev => ({ ...prev, [skill_matrix_id]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const ratingsArray = skillMatrix.map(matrix => ({
-        skill_matrix_id: matrix.skill_matrix_id,
-        employee_rating: ratings[matrix.skill_matrix_id] || 0
-      }));
+    if (!selectedAssessment) return;
 
-      await fetch(`http://localhost:3001/api/emp/matrix/rate`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+    const ratingsArray = skillMatrix.map(matrix => ({
+      skill_matrix_id: matrix.skill_matrix_id,
+      employee_rating: ratings[matrix.skill_matrix_id] || 0
+    }));
+
+    try {
+      await fetch(`http://localhost:3001/api/eval/submitAssessbyRole/${user?.employee_id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(ratingsArray)
       });
+
       alert("Ratings submitted!");
       setShowRatingSection(false);
     } catch (err) {
@@ -37,101 +85,84 @@ const Assessment=()=>{
     }
   };
 
-  const handleRatingChange = (skill_matrix_id: number, value: number) => {
-    setRatings(prev => ({ ...prev, [skill_matrix_id]: value }));
-  };
+  return (
+    <div className="p-4 flex flex-col md:flex-row gap-6">
+      <div className="md:w-1/3 w-full bg-gray-100 p-4 rounded-lg shadow-md">
+        <h2 className="text-lg font-semibold mb-4">Assessment Actions</h2>
   
-  useEffect(()=>{
-      const fetchAssess=async()=>{
-      try{
-        const res=await fetch(`http://localhost:3001/api/eval/getAssessbyRole/${user?.employee_id}`,{
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json'
-          },
-          body:JSON.stringify({
-            role_name:user?.role.role_name,
-            team_id:user?.team_id
-          })
-        })
-        if(!res.ok)
-        {
-          alert("Fetch was not successfull");
-        }
-        const data=await res.json();
-        console.log(data.self);
-        console.log(data.team[0]);
-        setAssess(data);
-      }
-      catch(err)
-      {
-        console.error(err);
-      }
-    }
-    fetchAssess()
-    },[user?.employee_id])
-
-    const handleAssessment = async () => {
-      try {
-        const res = await fetch(`http://localhost:3001/api/eval/matricesByAssess/${assess?.self?.assessment_id}`);
-        if (res.ok) {
-          const data = await res.json();
-          setSkillMatrix(data);
-          setShowRatingSection(true);
-        }
-        else{
-          setSkillMatrix([]);
-          setShowRatingSection(false);
-        }
-      } catch (err) {
-        console.error("Failed to fetch skill matrix:", err);
-      }
-    };
-    return(
-      <div className="p-4">
-        <div>
-            This is the Assessment
-        </div>
-        <button className="bg-violet-500 text-white rounded-md ml-2 hover:bg-violet-700 cursor-pointer p-2" onClick={handleAssessment}>Start Assessment</button>
-        {showRatingSection && (
-          <div className="flex justify-center items-center p-4">
-            <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-lg relative">
-              <h2 className="text-2xl font-semibold text-violet-700 mb-4 border-b pb-2 text-center">Rate Skills</h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {skillMatrix.length > 0 ? (
-                  skillMatrix.map((matrix) => (
-                    <div key={matrix.skill_matrix_id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-gray-50 rounded-md border border-gray-200 shadow-sm">
-                      <label className="font-medium text-gray-800 flex-grow pr-4">Skill: {matrix.skill.skill_name}</label>
-                      <div className="flex items-center gap-2 w-32">
-                        <input
-                          type="range"
-                          min="1"
-                          max="5"
-                          value={ratings[matrix.skill_matrix_id] || 0}
-                          onChange={(e) =>
-                            handleRatingChange(matrix.skill_matrix_id, parseInt(e.target.value))
-                          }
-                          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-violet-600"
-                          required
-                        />
-                        <span className="text-gray-700 font-semibold w-6 text-right">
-                          {ratings[matrix.skill_matrix_id] || 0}
-                        </span>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-gray-600 text-center py-10">No skills available for rating.</p>
-                )}
-                <button type="submit" className="w-full py-3 px-6 rounded-lg font-semibold shadow-md transition-colors duration-200 bg-green-600 hover:bg-green-700 text-white">
-                  Submit Ratings
-                </button>
-              </form>
-            </div>
+        {assess?.self && (
+          <div className="mb-4">
+            <h3 className="text-base font-medium">Self Assessment</h3>
+            <button
+              className="bg-violet-500 text-white w-full rounded-md px-4 py-2 mt-2 hover:bg-violet-700"
+              onClick={() => fetchSkillMatrix(assess.self!)}
+            >
+              Start Self Assessment
+            </button>
           </div>
         )}
-       </div>
-    )
-}
+  
+        {assess?.team && assess.team.length > 0 && (
+          <div>
+            <h3 className="text-base font-medium mb-2">Team Assessments</h3>
+            {assess.team.map((tm) => (
+              <div key={tm.assessment_id} className="flex items-center justify-between bg-white p-2 rounded-md mb-2 shadow-sm">
+                <div>Emp Name: {tm.employee.employee_name}</div>
+                <button
+                  className="bg-teal-500 text-white text-sm px-3 py-1 rounded-md hover:bg-teal-700"
+                  onClick={() => fetchSkillMatrix(tm)}
+                >
+                  Rate
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+  
+      <div className="md:w-2/3 w-full">
+        {showRatingSection ? (
+          <div className="bg-white p-6 rounded-lg shadow-xl">
+            <h2 className="text-2xl font-semibold text-violet-700 mb-4 border-b pb-2 text-center">
+              Rate Skills (Assessment ID: {selectedAssessment?.assessment_id})
+            </h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {skillMatrix.length > 0 ? (
+                skillMatrix.map((matrix) => (
+                  <div key={matrix.skill_matrix_id} className="flex items-center justify-between bg-gray-100 p-3 rounded-md">
+                    <label className="font-medium text-gray-700 flex-1">Skill: {matrix.skill.skill_name}</label>
+                    <input
+                      type="range"
+                      min="1"
+                      max="5"
+                      value={ratings[matrix.skill_matrix_id] || 0}
+                      onChange={(e) =>
+                        handleRatingChange(matrix.skill_matrix_id, parseInt(e.target.value))
+                      }
+                      className="w-32 accent-violet-600"
+                      required
+                    />
+                    <span className="w-6 text-right">{ratings[matrix.skill_matrix_id] || 0}</span>
+                  </div>
+                ))
+              ) : (
+                <p>No skills to rate.</p>
+              )}
+              <button
+                type="submit"
+                className="w-full py-2 rounded-md bg-green-600 hover:bg-green-700 text-white font-semibold"
+              >
+                Submit Ratings
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div className="text-gray-500 text-center mt-12">Select an assessment to start rating.</div>
+        )}
+      </div>
+    </div>
+  );
+  
+};
 
 export default Assessment;

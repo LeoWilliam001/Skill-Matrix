@@ -70,3 +70,20 @@ export const leadRates=async(req:Request, res:Response)=>{
         console.error("The error is : "+err);
     }
 }
+
+export const getMyTeam=async(req:Request,res:Response)=>{
+    try{
+        const id=req.params.id;
+        const members=await empService.getMyTeams(Number(id));
+        if(members==null)
+        {
+            res.status(400).json({msg:"Either no team members or you are not a lead"});
+        }
+        res.status(200).json(members);
+    }
+    catch(err)
+    {
+        console.error(err);
+        res.status(500).json({error:"Internal server error"});
+    }
+}
