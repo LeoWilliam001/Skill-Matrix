@@ -1,4 +1,9 @@
 import { useEffect, useState } from "react";
+import type { RootState } from "../../store";
+import { useSelector } from "react-redux";
+import SkillMatrix from "./SkillMatrix";
+import { FaEnvelopeOpenText } from "react-icons/fa";
+import { CgProfile } from "react-icons/cg";
 
 interface Skill {
   skill_name: string;
@@ -25,13 +30,16 @@ interface TeamMember {
 const TeamData = () => {
   const [team, setTeam] = useState<TeamMember[]>([]);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
-  const [skillMatrix, setSkillMatrix] = useState<SkillMatrix[]>([]);
+  // const [skillMatrix, setSkillMatrix] = useState<SkillMatrix[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const user = useSelector((state: RootState) => state.auth.user);
+
 
   useEffect(() => {
     const fetchTeam = async () => {
       try {
-        const res = await fetch("http://localhost:3001/api/emp/getMyTeam/2");
+        const res = await fetch(`http://localhost:3001/api/emp/getMyTeam/${user?.employee_id}`);
         if (!res.ok) throw new Error("Failed to fetch team data");
         const data = await res.json();
         setTeam(data);
@@ -45,12 +53,9 @@ const TeamData = () => {
 
   const handleViewSkillMatrix = async (member: TeamMember) => {
     try {
-      const res = await fetch(`http://localhost:3001/api/eval/getSkillMatrixByEmp/${member.employee_id}`);
-      if (!res.ok) throw new Error("Failed to fetch skill matrix");
-      const data = await res.json();
       setSelectedMember(member);
-      setSkillMatrix(data);
       setIsModalOpen(true);
+      
     } catch (err) {
       console.error("Skill Matrix Fetch Error:", err);
     }
@@ -59,10 +64,25 @@ const TeamData = () => {
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4 text-violet-700">Team Members</h2>
+      <div className="mb-4">
+      <input
+        type="text"
+        placeholder="Search employee by name or email..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full sm:w-1/4 border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+      />
+    </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {team.map((member) => (
-          <div key={member.employee_id} className="bg-white p-6 rounded-xl shadow-md border">
+        {team
+        .filter(member =>
+          member.employee_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          member.email.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .map((member) => (
+
+          <div key={member.employee_id} className="bg-white p-6 rounded-xl shadow-md border-2 border-violet-400">
             <div className="flex items-center gap-4 mb-4">
               <div className="w-12 h-12 rounded-full bg-violet-500 text-white flex items-center justify-center text-lg font-bold">
                 {member.employee_name.charAt(0).toUpperCase()}
@@ -81,13 +101,13 @@ const TeamData = () => {
             </div>
             <div className="flex flex-wrap gap-2">
               <button
-                className="px-3 py-1 text-sm bg-violet-600 hover:bg-violet-700 text-white rounded"
+                className="px-3 py-1 flex flex-row text-sm bg-white hover:text-violet-700 text-violet-600 rounded border-2 border-violet-400"
                 onClick={() => handleViewSkillMatrix(member)}
               >
-                View Skill Matrix
+                <FaEnvelopeOpenText size={18}/> <p className="ml-2">Skill Matrix</p>
               </button>
-              <button className="px-3 py-1 text-sm bg-gray-600 hover:bg-gray-700 text-white rounded">
-                View Full Profile
+              <button className="px-3 py-1 flex flex-row text-sm bg-white hover:text-violet-700 text-violet-600 rounded border-2 border-violet-400">
+              <CgProfile size={21}/> <p className="ml-2">View Full Profile</p>
               </button>
             </div>
           </div>
@@ -95,34 +115,17 @@ const TeamData = () => {
       </div>
 
       {isModalOpen && selectedMember && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white w-full max-w-2xl p-6 rounded-lg shadow-lg relative">
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50 overflow-y-auto">
+          <div className="bg-white w-1/2 max-w-5xl h-[80vh] overflow-y-auto p-6 rounded-lg shadow-lg relative">
             <h2 className="text-xl font-semibold text-violet-700 mb-4">
               {selectedMember.employee_name}'s Skill Matrix
             </h2>
-            {skillMatrix.length > 0 ? (
-              <ul className="space-y-3 max-h-80 overflow-y-auto">
-                {skillMatrix.map((matrix) => (
-                  <li key={matrix.skill_matrix_id} className="p-3 bg-gray-50 rounded-md border flex justify-between">
-                    <div className="text-gray-800 font-medium">{matrix.skill.skill_name}</div>
-                    <div className="text-sm text-gray-600">
-                      Employee: <strong>{matrix.employee_rating}</strong> | Lead: <strong>{matrix.lead_rating}</strong>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-600">No skill matrix found.</p>
-            )}
-            <button
-              className="absolute top-2 right-3 text-gray-500 hover:text-red-600 text-lg font-bold"
-              onClick={() => setIsModalOpen(false)}
-            >
-              ×
-            </button>
+
+            <SkillMatrix employeeId={selectedMember.employee_id} onClose={() => setIsModalOpen(false)} showTeam={false}/>
           </div>
         </div>
       )}
+
     </div>
   );
 };

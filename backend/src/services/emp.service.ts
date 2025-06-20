@@ -93,6 +93,8 @@ export class EmpService{
     async getMyTeams(id:number)
     {
         const team=await this.TeamRepo.findOneBy({'lead_id':id});
+        const hrTeam=await this.EmpRepo.find({
+            where:{'hr_id':id}});
         if(team)
         {
             const members=await this.EmpRepo.find({
@@ -102,7 +104,13 @@ export class EmpService{
             {
                 return null;
             }
+            console.log("Lead team is being returned");
             return members;
+        }
+        else if(hrTeam && hrTeam.length>0)
+        {
+            console.log("Hr team is being returned");
+            return hrTeam;
         }
         return null;
     }

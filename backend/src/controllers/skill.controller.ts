@@ -116,3 +116,17 @@ export const getSkillMatrixByLead=async(req:Request,res:Response)=>{
         res.status(500).json({error:"SkillMatrixLead: Internal server error"});
     }
 }
+
+export const getDesigTargetById = async (req: Request, res: Response):Promise<any> => {
+    try {
+      const result = await skillService.getDesigTargetById(Number(req.params.id));
+      if(!result)
+      {
+        res.status(400).json({msg:"Maybe some data issues"});
+      }
+      res.status(200).json(result);
+    } catch (err) {
+      console.error("Error fetching designation target:", err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  };

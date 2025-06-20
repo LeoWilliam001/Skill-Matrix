@@ -46,9 +46,15 @@ const Assessment = () => {
       if (res.ok) {
         const data = await res.json();
         setSkillMatrix(data);
-        setRatings({});
+        const initialRatings: { [key: number]: number } = {};
+        data.forEach((item: Matrix) => {
+          initialRatings[item.skill_matrix_id] = item.employee_rating;
+        });
+        setRatings(initialRatings);
+
         setSelectedAssessment(assessment);
         setShowRatingSection(true);
+
       } else {
         setSkillMatrix([]);
         setShowRatingSection(false);
@@ -135,14 +141,14 @@ const Assessment = () => {
                       type="range"
                       min="1"
                       max="5"
-                      value={ratings[matrix.skill_matrix_id] || 0}
+                      value={ratings[matrix.skill_matrix_id] ?? matrix.employee_rating}
                       onChange={(e) =>
                         handleRatingChange(matrix.skill_matrix_id, parseInt(e.target.value))
                       }
                       className="w-32 accent-violet-600"
                       required
                     />
-                    <span className="w-6 text-right">{ratings[matrix.skill_matrix_id] || 0}</span>
+                    <span className="w-6 text-right">{ratings[matrix.skill_matrix_id] ?? matrix.employee_rating}</span>
                   </div>
                 ))
               ) : (
@@ -166,3 +172,5 @@ const Assessment = () => {
 };
 
 export default Assessment;
+
+

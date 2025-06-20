@@ -18,7 +18,11 @@ const Dashboard = () => {
   useEffect(()=>{
       const fetchAssess=async()=>{
       try{
-        const res=await fetch(`http://localhost:3001/api/eval/assessByEmp/${user?.employee_id}`)
+        const res=await fetch(`http://localhost:3001/api/eval/getAssessbyRole/${user?.employee_id}`,{
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role_name: user?.role.role_name, team_id: user?.team_id })
+        })
         if(res.ok)
         {
           setAssess(true);
@@ -54,6 +58,7 @@ const Dashboard = () => {
       case 'skillUpgradeGuide':
         return <UpgradeGuide />;
       case 'assessment':
+        console.log(assess);
         if(assess && user.role.role_name!=="HR")
         {
           return <Assessment/>;

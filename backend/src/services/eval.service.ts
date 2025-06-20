@@ -48,9 +48,9 @@ export class EvalService{
                 where: {
                   team_id: team.team_id,
                 },
-              });
+              }); 
           
-              const teamMemberIds = teamMembers.map(emp => emp.employee_id).filter(eid => eid !== id); 
+              const teamMemberIds = teamMembers.map(emp => emp.employee_id).filter(eid => eid !== id);
           
               const memberAssessments = await this.assessmentRepo.find({
                 where: {
@@ -58,7 +58,7 @@ export class EvalService{
                   status: 1,
                   is_active: true,
                 },
-                relations:['employee']
+                relations:['employee','skill_matrix']
               });
           
               return {
@@ -159,5 +159,29 @@ export class EvalService{
             return matrices;
         }
         return;
+    }
+
+    async getTeamMatrixByQandY(e_id:number,quarter:number, year:number)
+    {
+      const team=await this.teamRepo.findOneBy({'lead_id':e_id});
+      const members=await this.employeeRepo.find({
+        where:{}
+      })
+
+      const teamMemberIds = members.map(emp => emp.employee_id).filter(eid => eid !== e_id);
+      
+      const memberAssessments = await this.assessmentRepo.find({
+        where: {
+          employee_id: In(teamMemberIds),
+          quarter: quarter,
+          year: year,
+        },
+        relations:['employee','skill_matrix']
+      });
+      if(memberAssessments)
+      {
+        memberAssessments;
+      }
+      return null;
     }
 }

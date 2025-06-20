@@ -20,11 +20,11 @@ export const getAssessmentbyId=async(req:Request, res:Response)=>{
 
 export const getAssessmentbyRoles=async(req:Request,res:Response)=>{
   try{
-    const {role_name,team_id}=req.body;
+    const {role_name}=req.body;
     const assessments=await evalService.getAssessmentbyRole(Number(req.params.id),role_name);
-    if(!assessments)
+    if(!assessments.self && (assessments.team==null || assessments.team.length==0 ))
     {
-      return null;
+      res.json(null);
     }
     res.status(200).json(assessments);
   }
@@ -80,5 +80,22 @@ export const getMatricesByAssess=async(req:Request,res:Response)=>{
   {
     console.error(err);
     res.status(500).json({error:"SkillMatrix:Internal server error"});
+  }
+}
+
+export const getTeamMatrixByQandY=async(req:Request,res:Response)=>{
+  try{
+    const {quarter,year} = req.body;
+    const matrices=await evalService.getTeamMatrixByQandY(Number(req.params.id),quarter,year);
+    if(!matrices)
+    {
+      return null;
+    }
+    res.status(200).json(matrices);
+  }
+  catch(err)
+  {
+    console.error(err);
+    res.status(500).json(err);
   }
 }

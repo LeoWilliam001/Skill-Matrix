@@ -8,6 +8,7 @@ import { SkillDesc } from "../entity/SkillDesc";
 import { SkillMatrix } from "../entity/SkillMatrix";
 import { SkillProg } from "../entity/SkillProg";
 import { Team } from "../entity/Team";
+import { Designation } from "../entity/Designation";
 
 export class SkillService{
     private assessRepo=AppDataSource.getRepository(Assessment);
@@ -68,7 +69,7 @@ export class SkillService{
     {
         const skillMatrix=await this.skillMatrixRepo.find({
             where:{employee_id:id},
-            relations:['skill']
+            relations:['skill','skill.position']
         })
         if(skillMatrix==null)
         {
@@ -96,10 +97,38 @@ export class SkillService{
                   employee_id: In(teamMemberIds),
                   status: 3,
                 },
-                relations:['employee','skill_matrix','skill_matrix.skill']
+                relations:['employee','employee.designation','skill_matrix','skill_matrix.skill','skill_matrix.skill.position']
               });
               return memberAssessments? memberAssessments:null;
         }
         return {"service":"Miscomm: not a lead"};
     }
+
+    async getDesigTargetById(id: number) {
+        const employee = await this.employeeRepo.findOne({
+          where: { employee_id: id },
+          relations: ['designation']
+        });
+      
+        if (!employee) throw new Error("Employee not found");
+      
+        const designationId = employee.designation.d_id;
+      
+        const data = await this.employeeRepo
+          .createQueryBuilder('emp')
+          .leftJoin('emp.emp_pos', 'ep')
+          .leftJoin('ep.position', 'pos')
+          .leftJoin('pos.skills', 'skill')
+          .leftJoin('threshold_values', 'tv', 'tv.skill_id = skill.skill_id AND tv.d_id = :desigId', { desigId: designationId })
+          .select([
+            'skill.skill_id',
+            'skill.skill_name',
+            'tv.threshold_value'
+          ])
+          .where('emp.employee_id = :id', { id })
+          .getRawMany();
+      
+        return data;
+      }
+      
 }

@@ -14,14 +14,18 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user);
-  const [showProfileMenu, setShowProfileMenu] = useState(false); // State for dropdown visibility
-  const profileMenuRef = useRef<HTMLLIElement>(null); // Ref for detecting clicks outside
+  const [showProfileMenu, setShowProfileMenu] = useState(false); 
+  const profileMenuRef = useRef<HTMLLIElement>(null); 
   const [assess,setAssess] = useState(false);
   useEffect(()=>{
       const fetchAssess=async()=>{
       try{
-        const res=await fetch(`http://localhost:3001/api/eval/assessByEmp/${user?.employee_id}`)
-        if(res.ok)
+        const res=await fetch(`http://localhost:3001/api/eval/getAssessbyRole/${user?.employee_id}`,{
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role_name: user?.role.role_name, team_id: user?.team_id })
+        })
+        if(await res.json()!=null)
         {
           setAssess(true);
         }
@@ -37,15 +41,14 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
   const handleLogout = () => {
     navigate('/');
     dispatch(logout());
-    setShowProfileMenu(false); // Close menu on logout
+    setShowProfileMenu(false); 
   };
 
   const handleProfileClick = () => {
     onNavigate('profile');
-    setShowProfileMenu(false); // Close menu on profile navigation
+    setShowProfileMenu(false); 
   };
 
-  // Effect to handle clicks outside the profile menu
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
@@ -99,7 +102,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
           </li>
 
 
-          {assess && (<li>
+          {(assess && (user.role.role_name !== "HR")) && (<li>
             <button
               onClick={() => onNavigate('assessment')}
               className="text-white hover:text-violet-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-opacity-75 rounded-md px-2 py-1"
@@ -141,7 +144,6 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
             </>
           )}
 
-          {/* Profile Icon and Dropdown */}
           <li className="relative flex items-center space-x-2 mt-4 md:mt-0 ml-4" ref={profileMenuRef}>
             <button
               onClick={() => setShowProfileMenu(!showProfileMenu)}

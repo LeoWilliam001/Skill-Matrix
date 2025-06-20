@@ -70,6 +70,7 @@ export interface Role {
     location:string | null;
     nationality:string | null;
     marital_status: string | null;
+    desig_id:number;
     is_active: number;
     created_at: string;
     role: Role;
@@ -117,8 +118,19 @@ export interface Role {
     is_active: boolean,
     initiated_at: Date,
     employee:User
+    skill_matrix:SkillMatrix[]
   }
   
+  export interface SkillMatrix{
+    skill_matrix_id: number;
+    employee_id: number;
+    assessment_id: number;
+    skill_id: number;
+    employee_rating: number;
+    lead_rating: number;
+    created_at: string;
+  }
+
   export interface Matrix
   {
     skill_matrix_id: number,

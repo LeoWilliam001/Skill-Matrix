@@ -4,6 +4,7 @@ import { type RootState } from '../../store';
 import {type User, type Dev} from '../../types/auth';
 import { Eye, EyeOff } from 'lucide-react'; 
 import { type MaritalStatus, type Gender } from '../../types/auth';
+import { FaEdit, FaEnvelopeOpenText } from "react-icons/fa";
 
 const ViewEmployee: React.FC = () => {
   const [employees, setEmployees] = useState<User[]>([]);
@@ -34,18 +35,6 @@ const ViewEmployee: React.FC = () => {
   
   const [createModal, setCreateModal] = useState(false);
   const [newEmp, setNewEmp] = useState<Partial<Dev>>({
-    employee_name: '',
-    email: '',
-    password:'',
-    age: 0,
-    gender: '',
-    location: '',
-    nationality: '',
-    marital_status: '',
-    role_id: 0,
-    hr_id: 0,
-    team_id: 0,
-    position:[]
   });
 
 
@@ -73,18 +62,7 @@ const ViewEmployee: React.FC = () => {
       setEmployees(prev => [...prev, created]);
       setCreateModal(false);
       setNewEmp({
-        employee_name: '',
-        email: '',
-        password:'',
-        age: 0,
-        gender: '',
-        location: '',
-        nationality: '',
-        marital_status: '',
-        role_id: 0,
-        hr_id: 0,
-        team_id: 0,
-        position:[]
+
       });
     } catch (err) {
       console.error("Create failed:", err);
@@ -200,18 +178,32 @@ const ViewEmployee: React.FC = () => {
             <h2 className="text-xl font-semibold text-violet-700 mb-1">{emp.employee_name}</h2>
             <p className="text-sm text-gray-600 mb-3">{emp.email}</p>
             <div className="mt-4 flex justify-end gap-3">
-              <button
+              {/* <button
                 onClick={() => openModal(emp, 'view')}
                 className="text-sm bg-violet-500 hover:bg-violet-700 text-white px-4 py-2 rounded-lg font-medium shadow-sm transition-colors duration-200"
               >
                 View
-              </button>
-              <button
+              </button> */}
+              <FaEnvelopeOpenText
+              size={20}
+              // color="purple"
+              className="cursor-pointer text-violet-500 hover:text-violet-700"
+              title='View'
+              onClick={() => openModal(emp, 'view')} />
+
+              {/* <button
                 onClick={() => openModal(emp, 'edit')}
                 className="text-sm bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium shadow-sm transition-colors duration-200"
               >
-                Edit
-              </button>
+               Edit
+              </button> */}
+              <FaEdit
+                size={21}
+                // color="purple"
+                className="cursor-pointer text-violet-500 hover:text-violet-700"
+                title='Edit'
+                onClick={() => openModal(emp, 'edit')}
+              />
             </div>
           </div>
         ))}
@@ -246,52 +238,153 @@ const ViewEmployee: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-4">
+                {/* Name */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Name</label>
-                  <input className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500" name="employee_name" value={selectedEmp.employee_name} onChange={handleChange} />
+                  <input
+                    className="w-full border border-gray-300 p-2 rounded-md focus:ring-2 focus:ring-violet-500"
+                    name="employee_name"
+                    value={selectedEmp.employee_name}
+                    onChange={handleChange}
+                  />
                 </div>
+            
+                {/* Email */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Email</label>
-                  <input className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500" name="email" value={selectedEmp.email} onChange={handleChange} />
+                  <input
+                    className="w-full border border-gray-300 p-2 rounded-md focus:ring-2 focus:ring-violet-500"
+                    name="email"
+                    value={selectedEmp.email}
+                    onChange={handleChange}
+                  />
                 </div>
+            
+                {/* Age */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Age</label>
-                  <input type="number" className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500" name="age" value={selectedEmp.age ?? ''} onChange={handleChange} />
+                  <input
+                    type="number"
+                    className="w-full border border-gray-300 p-2 rounded-md focus:ring-2 focus:ring-violet-500"
+                    name="age"
+                    value={selectedEmp.age ?? ""}
+                    onChange={handleChange}
+                  />
                 </div>
+            
+                {/* Gender */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Gender</label>
-                  <input className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500" name="gender" value={selectedEmp.gender ?? ''} onChange={handleChange} />
+                  <select
+                    name="gender"
+                    value={selectedEmp.gender ?? ""}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 p-2 rounded-md"
+                  >
+                    <option value="">Select Gender</option>
+                    {genderOptions.map((option) => (
+                      <option key={option} value={option}>{option}</option>
+                    ))}
+                  </select>
                 </div>
+            
+                {/* Location */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Location</label>
-                  <input className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500" name="location" value={selectedEmp.location ?? ''} onChange={handleChange} />
+                  <input
+                    className="w-full border border-gray-300 p-2 rounded-md focus:ring-2 focus:ring-violet-500"
+                    name="location"
+                    value={selectedEmp.location ?? ""}
+                    onChange={handleChange}
+                  />
                 </div>
+            
+                {/* Nationality */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Nationality</label>
-                  <input className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500" name="nationality" value={selectedEmp.nationality ?? ''} onChange={handleChange} />
+                  <input
+                    className="w-full border border-gray-300 p-2 rounded-md focus:ring-2 focus:ring-violet-500"
+                    name="nationality"
+                    value={selectedEmp.nationality ?? ""}
+                    onChange={handleChange}
+                  />
                 </div>
+            
+                {/* Marital Status */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Marital Status</label>
-                  <input className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500" name="marital_status" value={selectedEmp.marital_status ?? ''} onChange={handleChange} />
+                  <select
+                    name="marital_status"
+                    value={selectedEmp.marital_status ?? ""}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 p-2 rounded-md"
+                  >
+                    <option value="">Select Marital Status</option>
+                    {maritalStatusOptions.map((option) => (
+                      <option key={option} value={option}>{option}</option>
+                    ))}
+                  </select>
                 </div>
+            
+                {/* Role */}
                 <div>
-                  <label className="block mb-1 font-semibold text-gray-700">Role ID</label>
-                  <input type="number" className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500" name="role_id" value={selectedEmp.role_id} onChange={handleChange} />
+                  <label className="block mb-1 font-semibold text-gray-700">Role</label>
+                  <select
+                    name="role_id"
+                    value={selectedEmp.role_id}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 p-2 rounded-md"
+                  >
+                    <option value="">Select Role</option>
+                    {roles.map((role) => (
+                      <option key={role.role_id} value={role.role_id}>{role.role_name}</option>
+                    ))}
+                  </select>
                 </div>
+            
+                {/* HR */}
                 <div>
-                  <label className="block mb-1 font-semibold text-gray-700">HR ID</label>
-                  <input type="number" className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500" name="hr_id" value={selectedEmp.hr_id ?? ''} onChange={handleChange} />
+                  <label className="block mb-1 font-semibold text-gray-700">HR</label>
+                  <select
+                    name="hr_id"
+                    value={selectedEmp.hr_id ?? ""}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 p-2 rounded-md"
+                  >
+                    <option value="">Select HR</option>
+                    {hrs.map((hr) => (
+                      <option key={hr.employee_id} value={hr.employee_id}>{hr.employee_name}</option>
+                    ))}
+                  </select>
                 </div>
+            
+                {/* Team */}
                 <div>
-                  <label className="block mb-1 font-semibold text-gray-700">Team ID</label>
-                  <input type="number" className="w-full border border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500" name="team_id" value={selectedEmp.team?.team_id ?? ''} onChange={handleChange} />
+                  <label className="block mb-1 font-semibold text-gray-700">Team</label>
+                  <select
+                    name="team_id"
+                    value={selectedEmp.team_id ?? ""}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 p-2 rounded-md"
+                  >
+                    <option value="">Select Team</option>
+                    {teams.map((team) => (
+                      <option key={team.team_id} value={team.team_id}>{team.team_name}</option>
+                    ))}
+                  </select>
                 </div>
-
-                <button onClick={handleSave} className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg mt-4 font-semibold shadow-md transition-colors duration-200">
+            
+                            
+                {/* Save Button */}
+                <button
+                  onClick={handleSave}
+                  className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg mt-4 font-semibold shadow-md transition-colors duration-200"
+                >
                   Save Changes
                 </button>
               </div>
             )}
+            
           </div>
         </div>
       )}
