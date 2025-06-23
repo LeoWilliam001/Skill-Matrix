@@ -1,4 +1,6 @@
+// src/components/TeamMatrix.tsx
 import { useEffect, useState } from "react";
+import TeamSkillChart from "./TeamSkillChart"; // Import the new chart component
 
 interface Position {
   position_id: number;
@@ -44,11 +46,13 @@ const TeamSkillMatrix = () => {
   const [skillFilter, setSkillFilter] = useState("All");
   const [employeeFilter, setEmployeeFilter] = useState("All");
   const [designationFilter, setDesignationFilter] = useState("All");
+  const [showChart, setShowChart] = useState(false); // State to toggle chart visibility
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:3001/api/skill/getMatricesByLead/2");
+        const res = await fetch("http://localhost:3001/api/skill/getMatricesByLead/2"); // Make sure this lead ID is dynamic or from Redux
         const json = await res.json();
         setData(json);
       } catch (err) {
@@ -95,13 +99,6 @@ const TeamSkillMatrix = () => {
         skillFilter === "All" || skill.skill_name === skillFilter
       );
 
-  const filteredEmployees = data.filter(a =>
-    (positionFilter === "All" || a.skill_matrix.some(sm => sm.skill.position?.position_name === positionFilter)) &&
-    (designationFilter === "All" || a.employee.designation?.desig_name === designationFilter)
-  );
-
-  const uniqueEmployees = ["All", ...new Set(filteredEmployees.map(a => a.employee.employee_name))];
-
   const uniqueDesignations = ["All", ...new Set(data.map(a => a.employee.designation?.desig_name).filter(Boolean))];
 
   const filteredAssessments = data.filter(a => {
@@ -109,7 +106,7 @@ const TeamSkillMatrix = () => {
       a.skill_matrix.some(sm => sm.skill.position?.position_name === positionFilter);
 
     const matchesSkill = skillFilter === "All" ||
-      a.skill_matrix.some(sm => sm.skill.skill_name === skillFilter);
+      filteredSkills.some(fs => fs.skill_id === a.skill_matrix.find(sm => sm.skill.skill_id === fs.skill_id)?.skill.skill_id);
 
     const matchesEmployee = employeeFilter === "All" ||
       a.employee.employee_name === employeeFilter;
@@ -119,6 +116,9 @@ const TeamSkillMatrix = () => {
 
     return matchesPosition && matchesSkill && matchesEmployee && matchesDesignation;
   });
+
+  const uniqueEmployees = ["All", ...new Set(filteredAssessments.map(a => a.employee.employee_name))];
+
 
   return (
     <div className="p-4">
@@ -180,6 +180,12 @@ const TeamSkillMatrix = () => {
             ))}
           </select>
         </div>
+        <button
+          onClick={() => setShowChart(!showChart)}
+          className="ml-auto bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          {showChart ? "Hide Chart" : "Show Chart"}
+        </button>
       </div>
 
       <div className="overflow-x-auto bg-white rounded-lg shadow-md p-4">
@@ -214,6 +220,15 @@ const TeamSkillMatrix = () => {
           </tbody>
         </table>
       </div>
+
+      {showChart && (
+        <div className="mt-8 bg-white p-4 rounded-lg shadow-md">
+          <TeamSkillChart
+            filteredAssessments={filteredAssessments}
+            filteredSkills={filteredSkills}
+          />
+        </div>
+      )}
     </div>
   );
 };

@@ -79,6 +79,11 @@ export interface Role {
     team: Team | null;
     emp_pos: EmployeePos[];
   }
+
+  export interface Designation{
+    d_id:number;
+    desig_name:string;
+  }
   
   export interface AuthState {
     isLoggedIn: boolean;

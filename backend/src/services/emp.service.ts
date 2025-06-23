@@ -90,11 +90,13 @@ export class EmpService{
     {
         const team=await this.TeamRepo.findOneBy({'lead_id':id});
         const hrTeam=await this.EmpRepo.find({
-            where:{'hr_id':id}});
+            where:{'hr_id':id},
+            relations:['hr','role','designation','team']});
         if(team)
         {
             const members=await this.EmpRepo.find({
-                where:{'team_id':team.team_id}
+                where:{'team_id':team.team_id},
+                relations:['hr','role','designation','team']
             })
             if(!members)
             {
