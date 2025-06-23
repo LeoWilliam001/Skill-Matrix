@@ -23,7 +23,7 @@ export class Assessment{
     lead_comments: string;
 
     @Column({type:'tinyint'})
-    hr_approval:boolean;
+    hr_approval:number;
 
     @Column({type:'text'})
     hr_comments: string;

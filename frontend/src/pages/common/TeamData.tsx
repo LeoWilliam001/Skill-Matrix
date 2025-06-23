@@ -101,12 +101,12 @@ const TeamData = () => {
             </div>
             <div className="flex flex-wrap gap-2">
               <button
-                className="px-3 py-1 flex flex-row text-sm bg-white hover:text-violet-700 text-violet-600 rounded border-2 border-violet-400"
+                className="px-3 py-1 flex flex-row text-sm bg-white cursor-pointer hover:text-violet-700 text-violet-600 rounded border-2 border-violet-400"
                 onClick={() => handleViewSkillMatrix(member)}
               >
                 <FaEnvelopeOpenText size={18}/> <p className="ml-2">Skill Matrix</p>
               </button>
-              <button className="px-3 py-1 flex flex-row text-sm bg-white hover:text-violet-700 text-violet-600 rounded border-2 border-violet-400">
+              <button className="px-3 py-1 flex flex-row text-sm bg-white cursor-pointer hover:text-violet-700 text-violet-600 rounded border-2 border-violet-400">
               <CgProfile size={21}/> <p className="ml-2">View Full Profile</p>
               </button>
             </div>

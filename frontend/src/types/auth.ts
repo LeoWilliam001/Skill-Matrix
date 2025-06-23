@@ -37,6 +37,7 @@ export interface Role {
     skill_id:number;
     skill_name:string;
     pos_id:number;
+    desc: SkillDesc[];
   }
 
   export interface Position{
@@ -145,3 +146,22 @@ export interface Role {
   export type Gender = "Male" | "Female" | "Non-Binary" | "Prefer not to respond" | "Transgender";
 
   export type MaritalStatus = "Single" | "Married" | "Widowed" | "Separated";
+
+
+export interface SkillDesc
+{
+  level_id: number;
+  skill_id: number;
+  level_number: number;
+  description: string;
+}
+export interface SkillGuide
+{
+  path_id: number;
+  skill_id: number;
+  from_level_id: number;
+  to_level_id: number;
+  guidance: string;
+  resources_link: string;
+  skill: Skill;
+}

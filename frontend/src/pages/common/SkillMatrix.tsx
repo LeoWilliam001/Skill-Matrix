@@ -10,7 +10,6 @@ interface SkillMatrixProps {
   showTeam: boolean;
 }
 
-
 const SkillMatrix = ({ employeeId, onClose, showTeam}: SkillMatrixProps) => {
   const [query, setQuery] = useState(0);
   const [year, setYear] = useState(0);
@@ -70,26 +69,35 @@ const SkillMatrix = ({ employeeId, onClose, showTeam}: SkillMatrixProps) => {
       const diff = rating - target;
       setSelectedSkill(skill_name);
 
+      const guideRes = await fetch(`http://localhost:3001/api/skill/getUpgradeGuide/${skill_id}`);
+      const fullGuide = await guideRes.json();
+      console.log("Full Guide Data:", fullGuide); // Added console log here
+      console.log("Full Guide : "+fullGuide[0]);
       if (diff > 0) {
-        setSuggestions([
+        const upgrades = fullGuide.filter((g: any) => g.to_level_id > target);
+        const sug = [
           {
             guidance: "Your current rating exceeds the target. You may mentor others or prepare for advanced responsibilities.",
             resources_link: "#"
           }
-        ]);
+        ];
+        setSuggestions([...sug, ...upgrades]);
+      
       } else if (diff < 0) {
-        const guideRes = await fetch(`http://localhost:3001/api/skill/getUpgradeGuide/${skill_id}`);
-        const fullGuide = await guideRes.json();
         const upgrades = fullGuide.filter((g: any) => g.from_level_id >= rating && g.to_level_id <= target);
         setSuggestions(upgrades);
+      
       } else {
-        setSuggestions([
+        const upgrades = fullGuide.filter((g: any) => g.to_level_id > target);
+        const sug = [
           {
             guidance: "You are exactly at the target level. Maintain your consistency!",
             resources_link: "#"
           }
-        ]);
+        ];
+        setSuggestions([...sug, ...upgrades]);
       }
+      
     } catch (err) {
       console.error("Threshold or upgrade guide error", err);
     }
@@ -244,29 +252,55 @@ const SkillMatrix = ({ employeeId, onClose, showTeam}: SkillMatrixProps) => {
           </div>
 
           <div className="lg:w-2/5 border-2 border-violet-400 w-full mt-6 lg:mt-0 bg-gray-50 p-4 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold text-violet-600 mb-2">
-              Upgrade Suggestions {selectedSkill && `for ${selectedSkill}`}
-            </h3>
-            {suggestions && suggestions.length > 0 ? (
-              <ul className="space-y-3 max-h-80 overflow-y-auto pr-2">
-                {suggestions.map((s, idx) => (
-                  <li key={idx} className="p-3 bg-white border rounded-md">
-                    <p className="text-sm text-gray-800">{s.guidance}</p>
-                    {s.resources_link && (
-                      <a href={s.resources_link} target="_blank" rel="noreferrer" className="text-blue-600 text-sm underline block mt-1">
-                        View Resource
-                      </a>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-600 text-sm">No guidance needed. You're on track!</p>
-            )}
+              <h3 className="text-lg font-semibold text-violet-600 mb-2">
+                  Upgrade Suggestions {selectedSkill && `for ${selectedSkill}`}
+              </h3>
+              {suggestions && suggestions.length > 0 ? (
+                  <ul className="space-y-3 max-h-full overflow-y-auto pr-2">
+                      {suggestions.map((s, idx) => {
+                          console.log(s.skill);
+                            // Conditionally render from/to level descriptions only if s.skill and s.skill.skill_descs exist
+                            const fromLevelDesc = s.skill?.skill_descs?.find(
+                                (desc: any) => desc.level_number === s.from_level_id
+                            )?.description;
+                            const toLevelDesc = s.skill?.skill_descs?.find(
+                                (desc: any) => desc.level_number === s.to_level_id
+                            )?.description;
+
+                            return (
+                                <li key={idx} className="p-3 bg-white border rounded-md">
+                                    {fromLevelDesc && (
+                                        <p className="text-sm text-gray-800">
+                                            <strong>From Level {s.from_level_id}:</strong> {fromLevelDesc}
+                                        </p>
+                                    )}
+                                    {toLevelDesc && (
+                                        <p className="text-sm text-gray-800 mt-1">
+                                            <strong>To Level {s.to_level_id}:</strong> {toLevelDesc}
+                                        </p>
+                                    )}
+                                    <p className="text-sm text-gray-800 mt-2">{s.guidance}</p>
+                                    {s.resources_link && (
+                                        <a
+                                            href={s.resources_link}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="text-blue-600 text-sm underline block mt-1"
+                                        >
+                                            View Resource
+                                        </a>
+                                    )}
+                                </li>
+                            );
+                        })}
+                  </ul>
+              ) : (
+                  <p className="text-gray-600 text-sm">No guidance needed. You're on track!</p>
+              )}
           </div>
         </div>
       )}
-      {user?.role.role_name === "Lead" && showTeam!==false && (
+      {user?.role.role_name !== "Employee" && showTeam!==false && (
         <TeamMatrix/>
       )}
     </div>
@@ -274,3 +308,4 @@ const SkillMatrix = ({ employeeId, onClose, showTeam}: SkillMatrixProps) => {
 };
 
 export default SkillMatrix;
+

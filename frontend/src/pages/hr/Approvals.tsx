@@ -55,7 +55,7 @@ const HrApprovals = () => {
   }, []);
   
 
-  const handleApprove = async (assessment_id: number) => {
+  const handleApprove = async (assessment_id: number,hrApproval:number) => {
     const hrComment = comments[assessment_id];
 
     try {
@@ -63,14 +63,19 @@ const HrApprovals = () => {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          approval: hrApproval,
           comments: hrComment,
         })
       });
 
-      if (res.ok) {
+      if (res.ok && hrApproval==1) {
         alert("Approved successfully!");
         setTeamAssessments(prev => prev.filter(a => a.assessment_id !== assessment_id));
-      } else {
+      } 
+      else if(res.ok && hrApproval==2){
+        alert("Rejected successfully!");
+      }
+      else {
         alert("Approval failed");
       }
     } catch (err) {
@@ -123,10 +128,13 @@ const HrApprovals = () => {
             </div>
 
             <button
-              onClick={() => handleApprove(assess.assessment_id)}
+              onClick={() => handleApprove(assess.assessment_id,1)}
               className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md w-full"
             >
               Approve
+            </button>
+            <button onClick={()=>handleApprove(assess.assessment_id,2)} className="mt-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md w-full">
+              Reject
             </button>
           </div>
         ))}

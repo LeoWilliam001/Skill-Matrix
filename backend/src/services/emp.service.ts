@@ -10,10 +10,6 @@ export class EmpService{
     private SkillMatRepo=AppDataSource.getRepository(SkillMatrix);
     private AssessmentRepo=AppDataSource.getRepository(Assessment);
 
-    // async viewAllMatrix(){
-    //     const matrices=await this.SkillMatRepo.find();
-    //     if()
-    // }
     async viewmyTeamMatrix(id:number){
         const team=await this.TeamRepo.findOne({
             where:{lead_id:id}

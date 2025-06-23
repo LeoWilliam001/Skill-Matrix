@@ -74,7 +74,7 @@ const Assessment = () => {
 
     const ratingsArray = skillMatrix.map(matrix => ({
       skill_matrix_id: matrix.skill_matrix_id,
-      employee_rating: ratings[matrix.skill_matrix_id] || 0
+      employee_rating: ratings[matrix.skill_matrix_id] || 1
     }));
 
     try {
@@ -130,7 +130,7 @@ const Assessment = () => {
         {showRatingSection ? (
           <div className="bg-white p-6 rounded-lg shadow-xl">
             <h2 className="text-2xl font-semibold text-violet-700 mb-4 border-b pb-2 text-center">
-              Rate Skills (Assessment ID: {selectedAssessment?.assessment_id})
+              Rate Skills (Member: {selectedAssessment?.employee?.employee_name})
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               {skillMatrix.length > 0 ? (

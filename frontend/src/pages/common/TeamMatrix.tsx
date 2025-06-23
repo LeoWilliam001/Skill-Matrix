@@ -202,10 +202,10 @@ const TeamSkillMatrix = () => {
                 </td>
                 {filteredSkills.map(skill => {
                   const match = emp.skill_matrix.find(s => s.skill.skill_id === skill.skill_id);
-                  const cellClass = match ? getColorByRating(match.employee_rating) : "";
+                  const cellClass = match ? getColorByRating(match.lead_rating) : "";
                   return (
                     <td key={skill.skill_id} className={`border px-4 py-2 ${cellClass}`}>
-                      {match ? match.employee_rating : "-"}
+                      {match ? match.lead_rating : "-"}
                     </td>
                   );
                 })}

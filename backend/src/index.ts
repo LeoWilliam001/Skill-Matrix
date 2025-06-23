@@ -10,6 +10,7 @@ import skillRoutes from './routes/skill.route';
 import evalRoutes from './routes/eval.route';
 import cors from 'cors';
 import { requestLogger } from "./middleware/logger.middleware";
+import { initScheduledClosers } from "./job/initClosure";
 dotenv.config();
 
 const app=express();
@@ -26,8 +27,9 @@ app.use('/api/emp',empRoutes);
 app.use('/api/skill',skillRoutes);
 app.use('/api/eval',evalRoutes);
 
-AppDataSource.initialize().then(() => {
+AppDataSource.initialize().then(async() => {
     console.log("App datasource initialized");
+    await initScheduledClosers();
     app.listen(PORT,()=> console.log(`${PORT}`));
 
-}).catch(error => console.log(error));
+}).catch(error => console.log("DB init error ",error));

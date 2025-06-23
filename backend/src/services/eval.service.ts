@@ -4,12 +4,18 @@ import { Assessment } from "../entity/Assessment";
 import { Employee } from "../entity/Employee";
 import { SkillMatrix } from "../entity/SkillMatrix";
 import { Team } from "../entity/Team";
+import { AdminService } from "./admin.service";
+
+const adminService=new AdminService();
 
 export class EvalService{
     private assessmentRepo=AppDataSource.getRepository(Assessment);
     private skillMatrixRepo=AppDataSource.getRepository(SkillMatrix);
     private employeeRepo=AppDataSource.getRepository(Employee);
     private teamRepo=AppDataSource.getRepository(Team);
+
+    
+
     async getAssessmentbyId(id:number){
         const assessment=await this.assessmentRepo.findOne({
             where:{employee_id:id,
@@ -132,7 +138,7 @@ export class EvalService{
           return {message:"Employee rating are saved successfully"};
     }
 
-    async hrApprovalbyAssess(id:number,comments:string){
+    async hrApprovalbyAssess(id:number,comments:string,hrApproval:number){
       const assessment=await this.assessmentRepo.findOneBy({
         assessment_id:id
       })
@@ -140,10 +146,22 @@ export class EvalService{
       {
         return null;
       }
-      assessment.hr_approval=true;
-      assessment.hr_comments=comments;
-      assessment.status=3;
-      return await this.assessmentRepo.save(assessment);
+      else if(hrApproval==1)
+      {
+        assessment.hr_approval=1;
+        assessment.hr_comments=comments;
+        assessment.status=3;
+        return await this.assessmentRepo.save(assessment);
+      }
+      else if(hrApproval==2){
+        assessment.hr_approval=2;
+        assessment.hr_comments=comments;
+        assessment.is_active=false;
+        assessment.status=4;
+        await adminService.initiateAssessmentById(assessment.employee_id,assessment.quarter,assessment.year);
+        return await this.assessmentRepo.save(assessment);
+      }
+      return null;
     }
 
     async getMatrixByAssess(id:number)

@@ -1,4 +1,3 @@
-// src/components/Dashboard.tsx
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { type RootState } from '../../store';
@@ -6,7 +5,6 @@ import NavBar from './NavBar';
 import Profile from './Profile';
 import SkillCriteria from './SkillCriteria';
 import SkillMatrix from './SkillMatrix';
-import UpgradeGuide from './UpgradeGuide';
 import TeamData from './TeamData';
 import ViewEmp from '../hr/ViewEmp';
 import Assessment from './Assessment';
@@ -54,9 +52,7 @@ const Dashboard = () => {
       case 'skillCriteria':
           return <SkillCriteria />;
       case 'skillMatrix':
-          return <SkillMatrix />;
-      case 'skillUpgradeGuide':
-        return <UpgradeGuide />;
+          return <SkillMatrix showTeam={user.role.role_name!=="employee" && true} />;
       case 'assessment':
         console.log(assess);
         if(assess && user.role.role_name!=="HR")

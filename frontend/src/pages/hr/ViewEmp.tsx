@@ -166,7 +166,7 @@ const ViewEmployee: React.FC = () => {
   return (
     <div className="p-4">
       <button
-        className='mb-6 ml-1 p-2 px-4 bg-violet-500 rounded-xl hover:bg-violet-700 text-white font-semibold shadow-md transition-colors duration-200'
+        className='mb-6 ml-1 p-2 px-4 cursor-pointer bg-violet-500 rounded-xl hover:bg-violet-700 text-white font-semibold shadow-md transition-colors duration-200'
         onClick={handleEmpCreation}
       >
         + Add Employee

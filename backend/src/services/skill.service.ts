@@ -60,7 +60,7 @@ export class SkillService{
     {
         const guide=await this.skillProgRepo.find({
             where:{skill_id:id},
-            relations:['skill']
+            relations:['skill','skill.skill_descs']
         })
         return guide;
     }

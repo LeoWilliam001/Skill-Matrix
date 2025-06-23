@@ -9,6 +9,7 @@ import { error } from "console";
 import { Role } from "../entity/Role";
 import { Position } from "../entity/Position";
 import { Team } from "../entity/Team";
+import { scheduleAssessmentCloser } from "../job/scheduleClosure";
 
 export class AdminService{
     private EmpRepo=AppDataSource.getRepository(Employee);
@@ -76,7 +77,7 @@ export class AdminService{
             year,
             employee_id: emp.employee_id,
             lead_comments: '',
-            hr_approval: false,
+            hr_approval: 0,
             hr_comments: '',
           });
         });
@@ -119,10 +120,73 @@ export class AdminService{
         }
 
         await this.SkillMatrixRepo.save(skillMatrixEntries);
-
+        for (const assessment of savedAssessments) {
+            scheduleAssessmentCloser(assessment.assessment_id, new Date());
+          }
         return { message: 'Assessments and Skill Matrix initiated for all employees.' };
       }
 
+      //Initiate assessment by ID
+      async initiateAssessmentById(empId: number, q_id: number, year: number) {
+        const employee = await this.EmpRepo.findOne({
+          where: { employee_id: empId },
+        });
+      
+        if (!employee) {
+          throw new Error(`Employee with ID ${empId} not found`);
+        }
+      
+        const assessment = this.AssessmentRepo.create({
+          quarter: q_id,
+          year,
+          employee_id: empId,
+          lead_comments: '',
+          hr_approval: 0,
+          hr_comments: '',
+        });
+      
+        const savedAssessment = await this.AssessmentRepo.save(assessment);
+      
+        const empPositions = await this.EmpPosRepo.find({
+          where: { employee_id: empId },
+        });
+      
+        const uniquePosIds = [...new Set(empPositions.map(ep => ep.pos_id))];
+        const positionSkillsCache = new Map<number, Skill[]>();
+        let employeeRelevantSkills: Skill[] = [];
+      
+        for (const posId of uniquePosIds) {
+          if (!positionSkillsCache.has(posId)) {
+            const skillsForThisPosition = await this.SkillRepo.find({
+              where: { pos_id: posId },
+            });
+            positionSkillsCache.set(posId, skillsForThisPosition);
+          }
+          employeeRelevantSkills = employeeRelevantSkills.concat(positionSkillsCache.get(posId)!);
+        }
+      
+        const uniqueEmployeeRelevantSkills = Array.from(
+          new Set(employeeRelevantSkills.map(s => s.skill_id))
+        ).map(skillId => employeeRelevantSkills.find(s => s.skill_id === skillId)!);
+      
+        const skillMatrixEntries = uniqueEmployeeRelevantSkills.map(skill =>
+          this.SkillMatrixRepo.create({
+            employee_id: empId,
+            assessment_id: savedAssessment.assessment_id,
+            skill_id: skill.skill_id,
+            employee_rating: 0,
+            lead_rating: 0,
+          })
+        );
+      
+        await this.SkillMatrixRepo.save(skillMatrixEntries);
+      
+        scheduleAssessmentCloser(savedAssessment.assessment_id, new Date());
+      
+        return { message: `Assessment and Skill Matrix initiated for employee ${empId}.` };
+      }
+      
+ 
       async getRoles()
       {
         const roles=await this.RoleRepo.find();

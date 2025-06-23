@@ -53,7 +53,7 @@ export const submitAssessbyRole=async(req:Request,res:Response)=>{
 
 export const hrApprovalbyAssess=async(req:Request,res:Response)=>{
   try{
-    const approve=await evalService.hrApprovalbyAssess(Number(req.params.id),req.body.comments);
+    const approve=await evalService.hrApprovalbyAssess(Number(req.params.id),req.body.comments,req.body.approval);
     if(!approve)
     {
       res.status(400).json({msg:"Cannot be approved sorry"});

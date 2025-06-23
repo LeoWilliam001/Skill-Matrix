@@ -78,14 +78,6 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
         <ul className="flex flex-wrap justify-center md:flex-nowrap space-x-4 md:space-x-6 items-center text-sm md:text-base">
           <li>
             <button
-              onClick={() => onNavigate('skillUpgradeGuide')}
-              className="text-white hover:text-violet-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-opacity-75 rounded-md px-2 py-1"
-            >
-              Skill Upgrade Guide
-            </button>
-          </li>
-          <li>
-            <button
               onClick={() => onNavigate('skillCriteria')}
               className="text-white hover:text-violet-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-opacity-75 rounded-md px-2 py-1"
             >
