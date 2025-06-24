@@ -78,6 +78,35 @@ export class SkillService{
         return skillMatrix;
     }
 
+    async getRecentSkillMatrixById(id:number)
+    {
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth() + 1;
+        const currentQuarter = Math.ceil(currentMonth / 3);
+        const finishedAssessment = await this.assessRepo.find({
+            where: {
+                employee_id: id,
+                is_active: false, 
+                status:3
+            },
+            order: {
+                year: 'DESC',
+                quarter: 'DESC',
+            },
+        });
+        console.log(finishedAssessment);
+        if(finishedAssessment.length>0)
+        {
+            return await this.skillMatrixRepo.find({
+            where:{
+                assessment_id:finishedAssessment[0].assessment_id
+            },
+            relations:['skill','skill.position']
+        })}
+        return null;
+    }
+
     async getSkillMatrixByLead(id:number)
     {
         const team=await this.teamRepo.findOneBy({

@@ -1,4 +1,4 @@
-import { editCriteria, getAllSkills, getCriteria, getDesigTargetById, getPositions, getSkillMatrixById, getSkillMatrixByLead, getUpgradeGuide } from "../controllers/skill.controller";
+import { editCriteria, getAllSkills, getCriteria, getDesigTargetById, getPositions, getRecentSkillMatrixById, getSkillMatrixById, getSkillMatrixByLead, getUpgradeGuide } from "../controllers/skill.controller";
 import {Router} from 'express';
 
 const router=Router();
@@ -11,4 +11,6 @@ router.get('/getPositions',getPositions);
 router.get("/getMatricesById/:id",getSkillMatrixById);
 router.get("/getMatricesByLead/:id",getSkillMatrixByLead);
 router.get("/getDesigTarget/:id",getDesigTargetById);
+router.get("/getRecentMatrix/:id",getRecentSkillMatrixById);
+
 export default router;

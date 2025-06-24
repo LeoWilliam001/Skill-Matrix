@@ -54,7 +54,9 @@ export class AdminService{
     //View all employees
     async viewAllEmp()
     {
-        const employees=this.EmpRepo.find();
+        const employees=this.EmpRepo.find({
+          relations:['hr','role','designation','team']
+        });
         return employees;
     }
 

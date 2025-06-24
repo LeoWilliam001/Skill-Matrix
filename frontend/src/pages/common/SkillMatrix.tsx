@@ -49,7 +49,7 @@ const SkillMatrix = ({ employeeId, onClose, showTeam}: SkillMatrixProps) => {
 
   const fetchSkillMatrix = async () => {
     try {
-      const res = await fetch(`http://localhost:3001/api/skill/getMatricesById/${employeeId || user?.employee_id}`);
+      const res = await fetch(`http://localhost:3001/api/skill/getRecentMatrix/${employeeId || user?.employee_id}`);
       const data = await res.json();
       console.log(data);
       setSkillMatrix(data);
@@ -71,7 +71,7 @@ const SkillMatrix = ({ employeeId, onClose, showTeam}: SkillMatrixProps) => {
 
       const guideRes = await fetch(`http://localhost:3001/api/skill/getUpgradeGuide/${skill_id}`);
       const fullGuide = await guideRes.json();
-      console.log("Full Guide Data:", fullGuide); // Added console log here
+      console.log("Full Guide Data:", fullGuide); 
       console.log("Full Guide : "+fullGuide[0]);
       if (diff > 0) {
         const upgrades = fullGuide.filter((g: any) => g.to_level_id > target);

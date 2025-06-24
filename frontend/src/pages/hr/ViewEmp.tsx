@@ -178,28 +178,13 @@ const ViewEmployee: React.FC = () => {
             <h2 className="text-xl font-semibold text-violet-700 mb-1">{emp.employee_name}</h2>
             <p className="text-sm text-gray-600 mb-3">{emp.email}</p>
             <div className="mt-4 flex justify-end gap-3">
-              {/* <button
-                onClick={() => openModal(emp, 'view')}
-                className="text-sm bg-violet-500 hover:bg-violet-700 text-white px-4 py-2 rounded-lg font-medium shadow-sm transition-colors duration-200"
-              >
-                View
-              </button> */}
               <FaEnvelopeOpenText
               size={20}
-              // color="purple"
               className="cursor-pointer text-violet-500 hover:text-violet-700"
               title='View'
               onClick={() => openModal(emp, 'view')} />
-
-              {/* <button
-                onClick={() => openModal(emp, 'edit')}
-                className="text-sm bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium shadow-sm transition-colors duration-200"
-              >
-               Edit
-              </button> */}
               <FaEdit
                 size={21}
-                // color="purple"
                 className="cursor-pointer text-violet-500 hover:text-violet-700"
                 title='Edit'
                 onClick={() => openModal(emp, 'edit')}
@@ -220,25 +205,31 @@ const ViewEmployee: React.FC = () => {
               &times;
             </button>
 
-            <h2 className="text-2xl font-semibold text-violet-700 mb-4 border-b pb-2 capitalize">{mode} Employee</h2>
+            <h2 className="text-2xl font-semibold text-violet-700 mb-4 pb-2 capitalize"> {selectedEmp.employee_name}</h2>
 
             {mode === 'view' ? (
-              <div className="text-base text-gray-800 space-y-3">
-                <p><strong>ID:</strong> {selectedEmp.employee_id}</p>
-                <p><strong>Name:</strong> {selectedEmp.employee_name}</p>
-                <p><strong>Email:</strong> {selectedEmp.email}</p>
-                <p><strong>Age:</strong> {selectedEmp.age}</p>
-                <p><strong>Gender:</strong> {selectedEmp.gender}</p>
-                <p><strong>Location:</strong> {selectedEmp.location}</p>
-                <p><strong>Nationality:</strong> {selectedEmp.nationality}</p>
-                <p><strong>Marital Status:</strong> {selectedEmp.marital_status}</p>
-                <p><strong>Role ID:</strong> {selectedEmp.role_id}</p>
-                <p><strong>HR ID:</strong> {selectedEmp.hr_id ?? 'N/A'}</p>
-                <p><strong>Team ID:</strong> {selectedEmp.team_id ?? 'N/A'}</p>
+              <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 text-lg text-gray-800">
+              <div className="space-y-8">
+                <p className="font-bold text-gray-900 text-xl mb-2 border-b-2 border-violet-300 pb-2">Personal Information</p>
+                <p><span className="font-semibold text-gray-700">Employee ID:</span> {selectedEmp.employee_id}</p>
+                <p><span className="font-semibold text-gray-700">Full Name:</span> {selectedEmp.employee_name}</p>
+                <p><span className="font-semibold text-gray-700">Email:</span> {selectedEmp.email}</p>
+                <p><span className="font-semibold text-gray-700">Age:</span> {selectedEmp.age}</p>
+                <p><span className="font-semibold text-gray-700">Gender:</span> {selectedEmp.gender}</p>
               </div>
+
+              <div className="space-y-8">
+                <p className="font-bold text-gray-900 text-xl mb-2 border-b-2 border-violet-300 pb-2">Other Details</p>
+                <p><span className="font-semibold text-gray-700">Location:</span> {selectedEmp.location}</p>
+                <p><span className="font-semibold text-gray-700">Nationality:</span> {selectedEmp.nationality}</p>
+                <p><span className="font-semibold text-gray-700">Marital Status:</span> {selectedEmp.marital_status}</p>
+                <p><span className="font-semibold text-gray-700">Role:</span> {selectedEmp.role?.role_name ?? 'N/A'}</p>
+                <p><span className="font-semibold text-gray-700">HR:</span> {selectedEmp.hr?.employee_name ?? 'N/A'}</p>
+                <p><span className="font-semibold text-gray-700">Team:</span> {selectedEmp.team?.team_name ?? 'N/A'}</p>
+              </div>
+            </div>
             ) : (
               <div className="space-y-4">
-                {/* Name */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Name</label>
                   <input
@@ -249,7 +240,6 @@ const ViewEmployee: React.FC = () => {
                   />
                 </div>
             
-                {/* Email */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Email</label>
                   <input
@@ -260,7 +250,6 @@ const ViewEmployee: React.FC = () => {
                   />
                 </div>
             
-                {/* Age */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Age</label>
                   <input
@@ -272,7 +261,6 @@ const ViewEmployee: React.FC = () => {
                   />
                 </div>
             
-                {/* Gender */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Gender</label>
                   <select
@@ -288,7 +276,6 @@ const ViewEmployee: React.FC = () => {
                   </select>
                 </div>
             
-                {/* Location */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Location</label>
                   <input
@@ -299,7 +286,6 @@ const ViewEmployee: React.FC = () => {
                   />
                 </div>
             
-                {/* Nationality */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Nationality</label>
                   <input
@@ -310,7 +296,6 @@ const ViewEmployee: React.FC = () => {
                   />
                 </div>
             
-                {/* Marital Status */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Marital Status</label>
                   <select
@@ -326,7 +311,6 @@ const ViewEmployee: React.FC = () => {
                   </select>
                 </div>
             
-                {/* Role */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Role</label>
                   <select
@@ -342,7 +326,6 @@ const ViewEmployee: React.FC = () => {
                   </select>
                 </div>
             
-                {/* HR */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">HR</label>
                   <select
@@ -358,7 +341,6 @@ const ViewEmployee: React.FC = () => {
                   </select>
                 </div>
             
-                {/* Team */}
                 <div>
                   <label className="block mb-1 font-semibold text-gray-700">Team</label>
                   <select
@@ -375,7 +357,6 @@ const ViewEmployee: React.FC = () => {
                 </div>
             
                             
-                {/* Save Button */}
                 <button
                   onClick={handleSave}
                   className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg mt-4 font-semibold shadow-md transition-colors duration-200"
@@ -589,7 +570,7 @@ const ViewEmployee: React.FC = () => {
 
               <button
                 onClick={handleNewEmpSave}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg mt-4 font-semibold shadow-md transition-colors duration-200"
+                className="bg-violet-600 hover:bg-violet-700 text-white px-5 py-2 rounded-lg mt-4 font-semibold shadow-md transition-colors duration-200"
               >
                 Create Employee
               </button>

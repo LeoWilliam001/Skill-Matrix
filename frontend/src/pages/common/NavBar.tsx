@@ -1,4 +1,3 @@
-// src/components/Navbar.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { type RootState } from '../../store';
@@ -41,6 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
   const handleLogout = () => {
     navigate('/');
     dispatch(logout());
+    localStorage.removeItem('activeDashboardSection');
     setShowProfileMenu(false); 
   };
 
@@ -76,6 +76,14 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
       <div className="container flex flex-col md:flex-row justify-between items-center">
         <div className="text-white text-3xl font-extrabold mb-4 md:mb-0">Skill Matrix</div>
         <ul className="flex flex-wrap justify-center md:flex-nowrap space-x-4 md:space-x-6 items-center text-sm md:text-base">
+          <li>
+            <button
+              onClick={() => onNavigate('dash')}
+              className="text-white hover:text-violet-200 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-opacity-75 rounded-md px-2 py-1"
+            >
+              Dashboard
+            </button>
+          </li>
           <li>
             <button
               onClick={() => onNavigate('skillCriteria')}

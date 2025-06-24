@@ -97,7 +97,23 @@ export const getSkillMatrixById=async(req:Request,res:Response)=>{
     catch(err)
     {
         console.error(err);
-        res.status(500).json({error:"Skill matric: Internal server error"});
+        res.status(500).json({error:"Skill matrix: Internal server error"});
+    }
+}
+
+export const getRecentSkillMatrixById=async(req:Request,res:Response)=>{
+    try{
+        const matrices=await skillService.getRecentSkillMatrixById(Number(req.params.id));
+        if(matrices==null)
+        {
+            return null;
+        }
+        res.status(200).json(matrices);
+    }
+    catch(err)
+    {
+        console.error(err);
+        res.status(500).json({error:"Recent skill matrix: Internal server error"});
     }
 }
 

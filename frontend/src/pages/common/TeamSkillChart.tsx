@@ -73,8 +73,7 @@ const TeamSkillChart: React.FC<TeamSkillChartProps> = ({ filteredAssessments, fi
   };
 
   return (
-    // Add a height constraint to the chart's container
-    <div className="w-full mx-auto mt-8 h-[400px]"> {/* Fixed height for the chart container */}
+    <div className="w-full mx-auto mt-8 h-[400px]"> 
       <h2 className="text-xl font-semibold text-center mb-4">Team Skill Comparison Chart</h2>
       {datasets.length > 0 && labels.length > 0 ? (
         <Bar

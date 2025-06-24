@@ -182,7 +182,7 @@ const TeamSkillMatrix = () => {
         </div>
         <button
           onClick={() => setShowChart(!showChart)}
-          className="ml-auto bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="ml-auto bg-violet-500 text-white px-4 py-2 rounded hover:bg-violet-600"
         >
           {showChart ? "Hide Chart" : "Show Chart"}
         </button>
